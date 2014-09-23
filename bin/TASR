@@ -1,0 +1,1051 @@
+#!/usr/bin/perl
+
+
+#AUTHOR
+#   Rene Warren (c) 2006-2013
+#   Targeted Assembly of Sequence Reads (TASR) using the SSAKE assembly engine
+#   rwarren at bcgsc.ca
+
+#NAME
+#   TASR Rene Warren, November 2013
+
+#SYNOPSIS
+#   Targeted, de novo, assembly of next generation sequence reads 
+
+#DOCUMENTATION
+#   TASR.readme distributed with this software @ www.bcgsc.ca
+#   http://www.bcgsc.ca/platform/bioinfo/software/tasr
+#
+#   Warren RL, Holt RA, 2011 Targeted Assembly of Short Sequence Reads. PLoS ONE 6(5): e19816. doi:10.1371/journal.pone.0019816 
+#
+#   http://www.bcgsc.ca/platform/bioinfo/software/ssake
+#
+#   Warren RL, Sutton GG, Jones SJM, Holt RA.  2007.  Assembling millions of short DNA sequences using SSAKE.  Bioinformatics. 23(4):500-501
+#
+#   We hope this code is useful to you -- Please send comments & suggestions to rwarren * bcgsc.ca
+#   If you use TASR or SSAKE, the code or ideas, please cite our work
+
+#LICENSE
+#   TASR Copyright  (c) 2010-2013 Canada's Michael Smith Genome Science Centre.  All rights reserved.
+#   SSAKE Copyright (c) 2006-2012 Canada's Michael Smith Genome Science Centre.  All rights reserved.
+
+#   This program is free software; you can redistribute it and/or
+#   modify it under the terms of the GNU General Public License
+#   as published by the Free Software Foundation; either version 2
+#   of the License, or (at your option) any later version.
+
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+
+
+
+use strict;
+use Data::Dumper;
+#require "getopts.pl";
+use Getopt::Std;
+use vars qw($opt_f $opt_m $opt_o $opt_v $opt_r $opt_s $opt_t $opt_b $opt_c $opt_q $opt_n $opt_e $opt_u $opt_i $opt_a $opt_k);
+#&Getopts('f:m:o:v:r:z:s:t:b:c:q:n:e:u:i:a:k:');
+getopts('f:m:o:v:r:z:s:t:b:c:q:n:e:u:i:a:k:');
+#-----------------------------------------------------------------
+###DEFAULT VALUES, PLEASE CHANGE AS NEEDED or USE PROMPT TO ALTER
+my ($targetwordlen,$base_overlap,$min_overlap,$verbose,$MIN_READ_LENGTH,$SEQ_SLIDE,$min_base_ratio,$max_trim,$base_name,$max_count_trim,$min_tig_overlap,$space_restriction,$r_clip,$q_clip,$c_clip,$e_ascii,$reuse,$independent)=(15,2,20,0,21,1,0.7,0,"",10,20,1,0,10,30,33,0,0);
+
+my $version = "[v1.5.1]";
+my $per;
+my $MAX = 0;
+my $MAX_TOP = 1500; # this is the very maximum anchoring edge sequence that will be searched (designed for use with -s to prevent long searches)
+my $TRACK_COUNT = 0;
+my $illuminaLengthCutoff = 300; ### means all sequence reads greater than this are not illumina sequences
+my $SAMPATH = "/home/pubseq/BioSw/samtools/0.1.8/samtools"; ### default location of samtools in system 
+#my $SAMPATH = "/genesis/scratch/rwarren_prj/bin/samtools-0.1.19/samtools";
+#-----------------------------------------------------------------
+
+if(! $opt_f || ! $opt_s){
+   print "Usage: $0 $version\n";
+   print "-f  File of filenames (FOF) corresponding to .fasta, .fastq or .bam files with NGS reads to interrogate\n";
+   print " -a Full path to samtools (required only if .bam files listed in FOF)\n";
+   print "-s  Fasta file containing sequences to use as targets exclusively\n";
+   print "-m  Minimum number of overlapping bases with the target/contig during overhang consensus build up (default -m $min_overlap)\n";
+   print "-o  Minimum number of reads needed to call a base during an extension (default -o $base_overlap)\n";
+   print "-r  Minimum base ratio used to accept a overhang consensus base (default -r $min_base_ratio)\n";
+   print "-k  Target sequence word size to hash (default -k $targetwordlen)\n";
+   print "-u  Re-use NGS reads (-u 1 = yes, default = no, optional)\n";
+   print "-i  Independent assembly  i.e Targets used to recruit reads only, not guide/seed assemblies (-i 1 = yes, default = no, optional)\n";
+   print "  Note: if -i is set to 1, -u will be forced-set to 0 (not re-using reads)\n";
+#  print "-t  Trim up to -t base(s) on the contig end when all possibilities have been exhausted for an extension (default -t $max_trim, optional)\n";
+   print "-c  Quality-clip candidate reads (-c 1 = yes, default = no, optional)\n";
+   print " -q Phred quality score threshold (bases with -q XX and less will be clipped, default -q $q_clip, optional)\n";
+   print " -n Number of consecutive -q $q_clip bases (default -n $c_clip, optional)\n";
+   print "-e  ASCII offset (33=standard 64=illumina, default -n $e_ascii, optional)\n";
+   print "-b  Base name for your output files (optional)\n";
+   die "-v  Runs in verbose mode (-v 1 = yes, default = no, optional)\n";
+}
+
+my $file = $opt_f;
+my $target_file = $opt_s;
+
+$min_overlap = $opt_m if($opt_m);
+$base_overlap = $opt_o if($opt_o);
+$min_base_ratio = $opt_r if($opt_r);
+$max_trim = $opt_t if($opt_t);
+$verbose = $opt_v if($opt_v);
+$base_name = $opt_b if($opt_b);
+$r_clip = $opt_c if($opt_c);
+$q_clip = $opt_q if($opt_q);
+$c_clip = $opt_n if($opt_n);
+$e_ascii = $opt_e if($opt_e);
+$reuse = $opt_u if($opt_u);
+$independent = $opt_i if($opt_i);
+$reuse = 0 if($independent);
+$SAMPATH = $opt_a if($opt_a);
+$targetwordlen = $opt_k if($opt_k);
+
+my $display_target_file = $1 if ($target_file=~/([^\/]*)$/);
+
+#-------------------------------------------------
+
+### Naming output files
+if ($base_name eq ""){
+
+   $base_name = $file . ".tasr_m" . $min_overlap . "_o" . $base_overlap . "_r" . $min_base_ratio . "_u" . $reuse . "_i" . $independent .  "_t" . $max_trim . "_c" . $r_clip . "_k" . $targetwordlen;
+   if($r_clip){$base_name .= "_q" . $q_clip . "_n" . $c_clip;}
+   $base_name .= "_e" . $e_ascii . "_s-" . $display_target_file;
+   my $pid_num = getpgrp(0);
+   $base_name .= "_pid" . $pid_num;
+
+}
+
+my $contig = $base_name .  ".contigs";
+my $singlet = $base_name . ".singlets";
+my $log = $base_name . ".log";
+my $covfile = $base_name . ".coverage.csv";
+my $rdpositionfile = $base_name . ".readposition";
+my $pileupfile = $base_name . ".pileup";
+
+
+open (LOG, ">$log") || die "Can't write to $log -- fatal\n";
+
+if($min_overlap < 15 || $min_overlap > 100){
+   my $outofbound_message = "-m must be a number between 15-100 ...Exiting.\n";
+   print $outofbound_message;
+   print LOG $outofbound_message;
+   close LOG;
+   exit;
+}
+
+if($base_overlap < 1){
+   my $outofbound_message = "-o must be set to 1 or higher ...Exiting.\n";
+   print $outofbound_message;
+   print LOG $outofbound_message;
+   close LOG;
+   exit;
+}
+
+if($min_base_ratio <= 0.5 || $min_base_ratio > 1){
+   my $outofbound_message = "-r must be a number between 0.51 and 1.00 ...Exiting.\n";
+   print $outofbound_message;
+   print LOG $outofbound_message;
+   close LOG;
+   exit;
+}
+
+#-------------------------------------------------
+
+my $init_message = "\nRunning: $0 $version\n-f $file\n-s $target_file\n-m $min_overlap\n-o $base_overlap\n-r $min_base_ratio\n-u $reuse\n-i $independent\n-t $max_trim\n-e $e_ascii\n-c $r_clip\n";
+if($r_clip){$init_message.= " -q $q_clip\n -n $c_clip\n";}
+
+$init_message .= "\nFiles\n-----\nLog:\t\t$log\nContigs:\t$contig\nSinglets:\t$singlet\nLog file:\t$log\n";
+$init_message .= "\nCoverage:\t$covfile\nCoordinates:\t$rdpositionfile\nPileup:\t\t$pileupfile\n";
+
+print $init_message;
+print LOG $init_message;
+
+#-------------------------------------------------
+
+my $date = `date`;
+chomp($date);
+
+my $reading_reads_message = "\n=>Reading sequences. Initiated $date\n";
+print $reading_reads_message;
+print LOG $reading_reads_message;
+
+#-------------------------------------------------
+my $file_message = "";
+my $ct_fof_line = 0;
+
+if(! -e $file){
+   $file_message = "Invalid file of filenames: $file -- fatal\n";
+   print $file_message;
+   print LOG $file_message;
+   exit;
+}else{
+   open(FOF,$file) || die "Can't open file of filenames $file for reading -- fatal.\n";
+   while(<FOF>){
+      chomp;
+      $ct_fof_line++;
+      $file_message = "Checking $_...";
+      print $file_message;
+      print LOG $file_message;
+
+      if(! -e $_){
+         $file_message = "na\n*** File does not exist -- fatal (check the path/file and try again)\n";
+         if(/^\>/){
+           $file_message .= "It appears that the file you supplied in -f is in fasta format where it should be a file of filenames, listing the fullpath/fasta,fastq or bam files to consider (1 per line).\n";
+         }elsif(/^\@/){
+           $file_message .= "It appears that the file you supplied in -f is in fastq format where it should be a file of filenames, listing the fullpath/fasta, fastq or bam files to consider (1 per line).\n";
+         }
+         print $file_message;
+         print LOG $file_message;
+         exit;
+      }else{
+         $file_message = "ok\n";
+         print $file_message;
+         print LOG $file_message;
+      }
+   }
+   close FOF;
+}
+
+if(! -e $target_file){
+   $file_message = "\nInvalid file: $target_file -- fatal\n";
+   print $file_message;
+   print LOG $file_message;
+   exit;
+}else{
+   $file_message = "Checking sequence target file $target_file...ok\n";
+   print $file_message;
+   print LOG $file_message;
+}
+
+#-------------------------------------------------
+my $encoded = &encodeBases();
+my ($seed,$seedsplit);
+
+#-------------------------------------------------
+### Allow user to specify a fasta file containing sequences to use as seeds, exclusively
+my $use_seed_message = "\nUsing target sequence file $target_file for this assembly.\nNote: ONLY sequences in $target_file will be used as seeds (i.e. files listed in -f $opt_f will NOT be used as seeds, only used for extension)\n";
+print LOG $use_seed_message;
+print $use_seed_message if ($verbose);
+($seed,$seedsplit) = &loadSeed($target_file,$targetwordlen); 
+
+my($set,$bin);
+my $file_ct = 0;
+my $sumall=0;
+my $ctall=0;
+
+open(FOF,$file) || die "Can't open file of filenames $file for reading -- fatal\n";
+while(<FOF>){
+   chomp;
+   $file_ct++;
+   if(/\.bam/i){
+      if (! -e $SAMPATH){#only care if there are bam files to read
+         my $samtool_err_mess = "The executable $SAMPATH does not exist, please revise -- fatal.\n";
+         print LOG $samtool_err_mess;
+         print $samtool_err_mess; 
+         close LOG;
+         exit;
+      }
+      ($set,$bin,$sumall,$ctall) = &readBAM($sumall,$ctall,$set,$bin,$_,$encoded,$seedsplit,$r_clip,$q_clip,$c_clip,$e_ascii,$file_ct,$ct_fof_line,$targetwordlen);
+   }else{
+      ($set,$bin,$sumall,$ctall) = &readFastaFastq($sumall,$ctall,$set,$bin,$_,$encoded,$seedsplit,$r_clip,$q_clip,$c_clip,$e_ascii,$file_ct,$ct_fof_line,$targetwordlen);
+   }
+}
+close FOF;
+
+my $fc = $sumall / 3000000000;
+my $statslog = "Total reads interrogated (total bases): $ctall ($sumall) -- human genome equivalent(s) = $fc\n";
+printf $statslog;
+print LOG $statslog;
+
+if($independent){
+   my $ind_message = "-i has been set to 1, which means the target sequences are ONLY USED for recruiting reads, NOT guide the de novo assembly\n";
+   printf $ind_message;
+   print LOG $ind_message;
+   $seed = {};
+   $seed = $set;
+}
+
+my $seed_number_message = "Number of unique target/seed sequences: " . keys( %$seed ) . "\n";
+printf $seed_number_message;
+print LOG $seed_number_message;
+#-------------------------------------------------
+
+$date = `date`;
+chomp($date);
+
+my $start_message = "\n=>Sequence assembly. Initiated $date\n";
+print $start_message;
+print LOG $start_message;
+
+#-------------------------------------------------
+my ($sgl_count,$tig_count,$previous_index) = (1,1,0);
+
+open (TIG, ">$contig") || die "Can't write to $contig -- fatal\n";
+open (SIN, ">$singlet") || die "Can't write to $singlet -- fatal\n";
+open (CF, ">$covfile") || die "Can't write to $covfile -- fatal\n";
+open (RP, ">$rdpositionfile") || die "Can't write to $rdpositionfile -- fatal\n";
+open (PU, ">$pileupfile") || die "Can't write to $pileupfile -- fatal\n";
+
+my ($tig_length,$track_all,$alternate);
+
+eval{
+
+my $status_bar = "+";
+for(my $i=1;$i<=99;$i++){
+   $per->{$i}++;
+   my $ct = $i /10;
+   if($ct == int($ct)){$status_bar .= $ct;}else{$status_bar .= "-";}
+}
+$status_bar .= "+ x 10 [% complete]";
+print "$status_bar\n.";
+
+my $keys_start = keys ( %$seed );
+
+#--------------------------------------------
+ASSEMBLY:
+foreach my $seq (sort {$seed->{$b}{'count'}<=>$seed->{$a}{'count'}} keys %$seed){#cycle through the input [normalized] reads
+
+   my $track;
+
+   if(defined $seed->{$seq}{'count'}){#sequence read hasn't been used, is longer than 15 nt and the user-defined overlap minimum -m
+
+      my $seed_name = "";
+      if(defined $seed->{$seq}{'seed_name'}){$seed_name = $seed->{$seq}{'seed_name'};}
+
+      my $orig_mer = length($seq);
+
+      $track->{$seq}{'start'} = 1;
+      $track->{$seq}{'end'}   = $orig_mer;
+      $track->{$seq}{'cov'}   = $seed->{$seq}{'count'};
+      $track->{$seq}{'names'} = $seed->{$seq}{'names'};
+
+      #### Delete keys ref
+
+      my $start_sequence = $seq;
+      my $reads_needed = $seed->{$seq}{'count'};                       #tracks coverage
+
+      my $total_bases = $orig_mer * $reads_needed;
+      ($bin,$set,$seed) = deleteData($bin,$set,$seed,$seq,$encoded) if($independent);   #remove k-mer from hash table and prefix tree
+     
+      print "\n\n>>> START SEED SEQUENCE :: $seq <<<\n\n" if ($verbose);
+
+      ($seq, $set, $bin, $reads_needed, $total_bases, $track) = doExtension("3 prime", $orig_mer, $seq, $set, $bin, $reads_needed, $total_bases, $min_overlap, $base_overlap, $min_base_ratio, $track, $verbose, $tig_count, $max_trim, $encoded, $reuse);
+      ####end of 3' extension, beginning of 5' extension  (via 3' RC)
+      my $seqrc = reverseComplement($seq);
+      ($seqrc, $set, $bin, $reads_needed, $total_bases, $track) = doExtension("5 prime", $orig_mer, $seqrc, $set, $bin, $reads_needed, $total_bases, $min_overlap, $base_overlap, $min_base_ratio, $track, $verbose, $tig_count, $max_trim, $encoded, $reuse);
+      ####end of 5' extension
+      my $leng = length($seqrc);
+      my $reversetig = reverseComplement($seqrc);                   ### return to sequence, as inputted
+      my $trimmed_length = length($start_sequence) - 2*($max_trim);
+
+      if($reads_needed > 1){ ### this is different from ssake: if seed has recruited a read, even though no extension occured, output contig (seed)
+         $tig_length->{$tig_count} = $leng;
+         my $cov =  $total_bases / $leng;
+         if($independent){$seed_name = "contig" . $tig_count;}
+         printf TIG ">$seed_name|size%i|read%i|cov%.2f\n%s\n", ($leng,$reads_needed,$cov,$reversetig);    #print contigs to file
+         printf CF ">$seed_name|size%i|read%i|cov%.2f\n", ($leng,$reads_needed,$cov);
+         printf RP ">$seed_name|size%i|read%i|cov%.2f\n", ($leng,$reads_needed,$cov);
+
+         my @tigarr=split(//,$reversetig);
+         my $pileup;
+         my $gpos=0;
+         foreach my $gbase(@tigarr){
+            $gpos++;
+            $pileup->{$gpos}{'tig'}=$gbase;
+         }
+
+         ### initialize all positions;
+         my $hashcov;
+         for (my $bpo=1;$bpo<=$leng;$bpo++){
+           $hashcov->{$bpo}=0;
+         }
+
+         foreach my $rd (sort {$track->{$a}{'start'}<=>$track->{$b}{'start'}} keys %$track){
+            my $rdlist = $track->{$rd}{'names'};
+            foreach my $rdoflist (keys %$rdlist){
+               printf RP "%s,%i,%i,%s,%s\n", ($rdoflist,$track->{$rd}{'start'},$track->{$rd}{'end'},$rd,$rdlist->{$rdoflist}) if($rdoflist ne "");
+
+               my @covposition;
+               if($track->{$rd}{'start'} < $track->{$rd}{'end'}){### plus strand
+                  my ($sss,$eee) = ($track->{$rd}{'start'},$track->{$rd}{'end'});
+                  if($sss<0){$sss=1;}###<<
+                  if($eee>$leng){$eee=$leng;}###<<
+                  @covposition = ($sss .. $eee);
+
+                  my @rdseq=split(//,$rd);
+                  my @rdqua=split(//,$rdlist->{$rdoflist});
+                  my $rdpos=0;
+                  #foreach my $vpos(@covposition){
+                  for(my $vpos=$track->{$rd}{'start'};$vpos<=$track->{$rd}{'end'};$vpos++){
+                     if($vpos>=1 && $vpos<=$gpos){
+                        if($rdoflist eq $seed->{$rd}{'seed_name'}){
+                           my @seedarr = split(//,$seed->{$rd}{'ori'});
+                           $pileup->{$vpos}{'interest'} = $seedarr[$rdpos] if($seedarr[$rdpos]=~/[acgt]/);
+                        }
+
+                        my $tmpq = $rdqua[$rdpos];
+                        $pileup->{$vpos}{'qua'} .= "$tmpq";
+                        #if($vpos == $track->{$rd}{'start'}){
+                        #   $pileup->{$vpos}{'seq'} .= "^";
+                        #}elsif($vpos == $track->{$rd}{'end'}){
+                        #   $pileup->{$vpos}{'seq'} .= "\$";
+                        #}else{
+                           if($pileup->{$vpos}{'tig'} eq $rdseq[$rdpos]){
+                              $pileup->{$vpos}{'seq'} .= "." if($rdoflist ne $seed->{$rd}{'seed_name'});### don't want to count depth for target sequence
+                           }else{
+                              $pileup->{$vpos}{'seq'} .= $rdseq[$rdpos];
+                           }
+                        #}
+                     }
+                     $rdpos++;
+                  }
+               }else{### minus strand
+                  my ($sss,$eee) = ($track->{$rd}{'end'},$track->{$rd}{'start'});
+                  if($sss<0){$sss=1;}###<<
+                  if($eee>$leng){$eee=$leng;}###<<
+                  @covposition = ($sss .. $eee);
+
+                  my @rdseq=split(//,reverseComplement($rd));
+                  my @rdqua=split(//,reverse($rdlist->{$rdoflist}));
+                  my $rdpos=0;
+                  #foreach my $vpos(@covposition){
+                  for(my $vpos=$track->{$rd}{'end'};$vpos<=$track->{$rd}{'start'};$vpos++){
+                     if($vpos>=1 && $vpos<=$gpos){
+                        my $tmpq = $rdqua[$rdpos];
+                        $pileup->{$vpos}{'qua'} .= "$tmpq";
+                        #if($vpos == $track->{$rd}{'start'}){
+                        #   $pileup->{$vpos}{'seq'} .= "^";
+                        #}elsif($vpos == $track->{$rd}{'end'}){
+                        #   $pileup->{$vpos}{'seq'} .= "\$";
+                        #}else{
+                           if($pileup->{$vpos}{'tig'} eq $rdseq[$rdpos]){
+                              $pileup->{$vpos}{'seq'} .= ",";
+                           }else{
+                              $pileup->{$vpos}{'seq'} .= lc($rdseq[$rdpos]);
+                           }
+                        #}
+                     }
+                     $rdpos++;
+                  }
+               }
+               foreach my $pss (@covposition){$hashcov->{$pss}++;}
+            }      
+         }
+         foreach my $pss (sort {$a<=>$b} keys %$hashcov){
+            $hashcov->{$pss}=$base_overlap if(! $hashcov->{$pss});## where cov can't be null
+            print CF "$hashcov->{$pss},";
+         }
+         print CF "\n";
+
+         foreach my $tigpos (sort {$a<=>$b} keys %$pileup){
+            my $depth = length($pileup->{$tigpos}{'seq'});
+            my $base = "";
+            if($pileup->{$tigpos}{'interest'} ne ""){
+               $base = $pileup->{$tigpos}{'interest'}; 
+            }else{
+               $base = $pileup->{$tigpos}{'tig'};
+            }
+            print PU "$seed_name\t$tigpos\t$base\t$depth\t$pileup->{$tigpos}{'seq'} $pileup->{$tigpos}{'qua'}\n";  
+         }
+         $tig_count++;
+         print PU "\n";
+
+      }else{
+         my $cov = $reads_needed;
+         my $singlet_leng = length($start_sequence);
+         if($independent){$seed_name = "singlet" . $sgl_count;}
+         printf SIN ">$seed_name|size%i|read%i|cov%.2f\n%s\n", ($singlet_leng,$reads_needed,$cov,$start_sequence);    #print singlets to file
+         $sgl_count++;
+      }
+   }
+   delete $seed->{$seq};### in -i on/off, can't get rid of seed/target sequence
+   my $keys_left = keys( %$seed );
+   my $index = (int((($keys_start-$keys_left)/$keys_start)*100));
+   if(defined $per->{$index}){
+      print "." x ($index - $previous_index);
+      $|=1; ###clear buffer
+      delete $per->{$index};
+   }
+   $previous_index = $index;
+
+   last ASSEMBLY if (! $keys_left);
+}
+print ".";
+};###end eval block
+
+$date = `date`;
+chomp($date);
+
+if($@){
+   my $message = $@;
+   my $failure = "\nSomething went wrong running $0 $date\n$message\n";
+   print $failure;
+   print LOG $failure; 
+}else{
+   my $success = "\nContig assembly executed normally $date\n";
+   print $success;
+   print LOG $success;
+}
+
+close TIG;
+close SIN;
+close CF;
+close RP;
+close PU;
+
+#------------------------------------
+$date = `date`;
+chomp($date);
+
+close LOG;
+exit;
+
+#-----------------------
+sub collectOverhang{
+
+   my ($overhang,$newpass,$dangle,$set,$verbose) = @_;
+
+   my @over = split(//,$dangle);
+   my $ct_oh = 0;
+
+   foreach my $bz(@over){
+      $ct_oh++;                                                   ### tracks overhang position passed the seed
+      $overhang->{$ct_oh}{$bz} += $set->{$newpass}{'count'};      ### reflects read coverage (often real duplicates)
+      print "$ct_oh - $bz = $overhang->{$ct_oh}{$bz}\n" if($verbose);
+   }
+
+   return $overhang;
+}
+
+#-----------------
+# TASR contig extension
+sub doExtension{
+
+   my ($direction, $orig_mer, $seq, $set, $bin, $reads_needed, $total_bases, $min_overlap, $base_overlap, $min_base_ratio, $track, $verbose, $tig_count, $max_trim, $e, $reuse) = @_;
+
+   my $extended = 1;
+   my $trim_ct = 0;     #trim counter - keeps track of 3'-end trim
+
+   if($orig_mer > $MAX){$orig_mer=$MAX;}  ### Deals with special cases where the seed sequences are different from the read set (and possibly very large) - goal here is not to increase sequence coverage of seed, but rather to extend it.
+
+   TRIM:
+   while($trim_ct <= $max_trim){
+      while($extended){
+         my $growing_tig_length = length($seq);
+         my ($pos,$span) = (0,"");
+
+         ### Added 19March08
+         if($growing_tig_length >= $MAX){   # $seq is length of contig being extended -- if larger than largest read, make sure the largest read could align and all subsequent rds.
+            $span = $MAX - $TRACK_COUNT;
+         }else{
+            $span = $growing_tig_length - $TRACK_COUNT;
+         }
+
+         my $overhang = {};
+         my $overlapping_reads = {};
+         my $long = 0;
+
+         for (my $x=1;$x <= ($orig_mer * 2);$x++){
+            ($overhang->{$x}{'A'},$overhang->{$x}{'C'},$overhang->{$x}{'G'},$overhang->{$x}{'T'}) = (0,0,0,0);
+         }
+
+         ### COLLECT SEQUENCES 
+         while ($span >= $min_overlap){  # will slide the subseq, until the user-defined min overlap size
+
+            $pos = $growing_tig_length - $span;
+            print "MAX:$MAX, SPAN:$span, POS:$pos" if ($verbose);
+
+            my $subseq = substr($seq, $pos, $span);              #make a sub-sequence of length l-(1..i) for searching
+            my @s = $subseq =~ /\S{3}/g;
+            my $subset = $bin->{$e->{$s[0]}}{$e->{$s[1]}}{$e->{$s[2]}}{$e->{$s[3]}}{$e->{$s[4]}}; #Will grab everything even the reverse complement ones
+
+            print "####$direction SEARCH Position:$pos Span:$span - Subseq:$subseq Previous:$seq\n" if ($verbose);
+
+            ### SEARCH -- this cycles through limited k-mer space
+            foreach my $pass (sort {$subset->{$b} <=> $subset->{$a}} keys %$subset){
+               if($pass =~ /^$subseq([ACGT]+)/){#### OVERHANG 
+                  #can we align perfectly that subseq to another rd start?
+                  my $dangle = $1;
+                  print "\n", "=" x 80, "\n$direction'- FOUND sequence: $pass -> subset: $subseq -> overhang: $dangle\n", "=" x 80, "\n\n" if ($verbose);
+                  #---------------------------------
+                  my $psr;
+                  my $pass_rc = reverseComplement($pass);
+
+                  if(defined $set->{$pass}){
+                     $psr->{$pass}{'start'} = $pos + 1;
+                     $psr->{$pass}{'end'} = $pos + length($pass);
+                  }
+
+                  if(defined $set->{$pass_rc}){
+                     $psr->{$pass_rc}{'start'} = $pos + length($pass_rc);
+                     $psr->{$pass_rc}{'end'} = $pos + 1;
+                  }
+
+                  ###############################################
+                  # CONSIDER CERTAIN READS FOR OVERLAP, PREFERABLY THOSE WITH LOGICAL MATES AND FWD READS IN TIG LARGE ENOUGH TO HAVE SUCH PAIRS
+                  foreach my $newpass(keys %$psr){
+                     $overhang = collectOverhang($overhang,$newpass,$dangle,$set,$verbose);
+                     $overlapping_reads->{$pass}++;
+                     $long=1 if(length($newpass) > $illuminaLengthCutoff);
+                  }###for $newpass
+                  #----------------------------------
+               }elsif($subseq =~ /$pass/){     #### EMBEDDED
+                  my $complement_pass = reverseComplement($pass);
+                  print "$pass found in $subseq ($set->{$pass}{'count'}) - deleting read: $pass and complement ($set->{$complement_pass}): $complement_pass\n\n" if ($verbose);
+
+                  if(defined $set->{$pass}){
+                     my $current_reads = $set->{$pass}{'count'};
+                     my $current_bases = length($pass) * $current_reads;
+                     $reads_needed += $current_reads;
+                     $total_bases += $current_bases;
+                     $track->{$pass}{'start'} = $pos + 1;
+                     $track->{$pass}{'end'} = $pos + length($pass);
+                     $track->{$pass}{'cov'} = $current_reads;
+                     $track->{$pass}{'names'} = $set->{$pass}{'names'};
+                     ($bin,$set,$seed) = deleteData($bin,$set,$seed,$pass,$e) if(! $reuse);
+                     #print "EMBED .. $pass ($current_reads)\n";
+                  }
+
+                  if(defined $set->{$complement_pass}){
+                     my $current_reads = $set->{$complement_pass}{'count'};
+                     my $current_bases = length($complement_pass) * $current_reads;
+                     $reads_needed += $current_reads;
+                     $total_bases += $current_bases;
+                     $track->{$complement_pass}{'end'} = $pos + 1;
+                     $track->{$complement_pass}{'start'} = $pos + length($complement_pass);
+                     $track->{$complement_pass}{'cov'} = $current_reads;
+                     $track->{$complement_pass}{'names'} = $set->{$complement_pass}{'names'};
+                     ($bin,$set,$seed) = deleteData($bin,$set,$seed,$complement_pass,$e) if(! $reuse);
+                     #print "EMBED .. $complement_pass ($current_reads)\n";
+                  }
+               }  
+            }
+            $span--;
+         }#while overlap >= user-defined -m minimum
+
+         my $consensus = "";
+         print "Finished Collecting Overlapping Reads - BUILDING CONSENSUS...\n" if ($verbose);
+         print Dumper(%$overlapping_reads) if ($verbose);
+
+         my $tmp_base_overlap = $base_overlap;
+         if($long){
+            $tmp_base_overlap = 2;
+         }
+
+         ### Build consensus
+         CONSENSUS:
+         foreach my $ohpos (sort {$a<=>$b} keys %$overhang){
+            if($ohpos){
+
+               my $coverage = $overhang->{$ohpos}{'A'}+$overhang->{$ohpos}{'C'}+$overhang->{$ohpos}{'G'}+$overhang->{$ohpos}{'T'};
+               print "pos:$ohpos cov:$coverage A:$overhang->{$ohpos}{'A'} C:$overhang->{$ohpos}{'C'} G:$overhang->{$ohpos}{'G'} T:$overhang->{$ohpos}{'T'}\n" if($verbose);
+
+               if ($coverage < $tmp_base_overlap){
+                  print "COVERAGE BELOW THRESHOLD: $coverage < -o $tmp_base_overlap @ $ohpos :: will extend by: $consensus\n" if ($verbose);
+                  last CONSENSUS;
+               }
+               my $baselist = $overhang->{$ohpos};
+
+               my $ct_dna=0;
+               my $previous_bz = "";
+
+               BASE:
+               foreach my $bz (sort {$baselist->{$b}<=>$baselist->{$a}} keys %$baselist){
+                  #print "\t$ct_dna -> $bz..$baselist->{$previous_bz} > $baselist->{$bz}\n";
+                  if($ct_dna){## the two most abundant bases at that position
+                     #print "\t\t$ct_dna\n";
+                     if($previous_bz ne "" && ($baselist->{$previous_bz} / $coverage) >= $min_base_ratio && $baselist->{$previous_bz} > $baselist->{$bz}){### a simple consensus btw top 2 
+                        $consensus .= $previous_bz;                                         ### build consensus
+                        print "Added base $previous_bz (cov = $baselist->{$previous_bz}) to $consensus **\n" if ($verbose);
+                        last BASE;
+                     }else{
+                        print "ISSUES EXTENDING: best base = $previous_bz (cov=$baselist->{$previous_bz}) at $ohpos.  Second-Best: $bz (cov=$baselist->{$bz}) (ratio best=$baselist->{$previous_bz} / total=$coverage) >= $min_base_ratio (-r) -- will terminate with $consensus\n" if($verbose);
+                        last CONSENSUS;
+                     }
+                  }
+                  $previous_bz = $bz;                 
+                  $ct_dna++;
+               }
+            }
+         }
+         $long = 0;
+         ### deal with sequence reads making up the consensus/newly formed contig
+         if($consensus ne ""){
+
+            print "Will extend $seq\nwith: $consensus\n\n" if($verbose);
+            my $temp_sequence = $seq . $consensus;
+            my $position_buffer = 0;
+            if($growing_tig_length > $MAX){
+               $temp_sequence = substr($seq,$growing_tig_length-$MAX,$MAX) . $consensus;
+               $position_buffer = $growing_tig_length-$MAX;
+            }
+            my $integral = 0;
+            my $temp_sequence_portion = "-" x length($temp_sequence);
+
+            foreach my $ro (keys %$overlapping_reads){
+               my $or_pos = -99;
+               while($temp_sequence =~ /$ro/g){     ### want the last position
+                  $or_pos = pos($temp_sequence);
+               } 
+               if($or_pos > 0){
+
+                  ###TRACK COVERAGE TO PREVENT FAULTY EXTENSIONS
+                  my $linestring = '.' x length($ro);
+                  substr ($temp_sequence_portion,$or_pos,length($ro),$linestring);
+
+                  $or_pos += $position_buffer;
+                  my $complement_ro = reverseComplement($ro);
+
+                  print "$ro found in $seq ($set->{$ro}{'count'}) - deleting read: $ro and complement ($set->{$complement_ro}{'count'}): $complement_ro\n\n" if ($verbose); 
+                  if(defined $set->{$ro}){          
+                     my $current_reads = $set->{$ro}{'count'};  
+                     #print "fwd SET:$current_reads BIN $subset->{$ro}\n";
+                     my $current_bases = length($ro) * $current_reads;
+                     $integral += $current_reads;
+                     $reads_needed += $current_reads;
+                     $total_bases += $current_bases;
+                     $track->{$ro}{'start'} = $or_pos - length($ro) + 1;
+                     $track->{$ro}{'end'} = $or_pos;
+                     $track->{$ro}{'cov'} = $current_reads;
+                     $track->{$ro}{'names'} = $set->{$ro}{'names'};
+                     #my $lro=length($ro);
+                     #print "OVER FWD\n$seq ($growing_tig_length)\n$temp_sequence\n$consensus\n$ro ($current_reads)\tend=$or_pos ($track->{$ro}{'start'}-$track->{$ro}{'end'})\n\n";
+                     ($bin,$set,$seed) = deleteData($bin,$set,$seed,$ro,$e) if (! $reuse);
+                  }
+
+                  if(defined $set->{$complement_ro}){          
+                     my $current_reads = $set->{$complement_ro}{'count'}; 
+                     #print "rc SET:$current_reads BIN $subset_rc->{$complement_ro}\n";
+                     my $current_bases = length($complement_ro) * $current_reads;
+                     $integral += $current_reads;
+                     $reads_needed += $current_reads;
+                     $total_bases += $current_bases;
+                     $track->{$complement_ro}{'end'} = $or_pos - length($ro) + 1;
+                     $track->{$complement_ro}{'start'} = $or_pos;
+                     $track->{$complement_ro}{'cov'} = $current_reads;
+                     $track->{$complement_ro}{'names'} = $set->{$complement_ro}{'names'};
+                     #my $lro=length($ro);
+                     #print "OVER REV\n$seq ($growing_tig_length)\n$temp_sequence\n$consensus\n$complement_ro ($current_reads)\tstart=$or_pos($track->{$complement_ro}{'start'}-$track->{$complement_ro}{'end'})\n\n";
+                     
+                     ($bin,$set,$seed) = deleteData($bin,$set,$seed,$complement_ro,$e) if(! $reuse);
+                  }
+               }
+            }
+            #if(! $integral){### no reads are found overlapping with the consensus might be indicative of low complexity regions -- Stop the extension
+            if($integral < $tmp_base_overlap){
+               print "No overlapping reads agree with the consensus or number of agreeing reads is lower than target coverage (tmp:$tmp_base_overlap  -o $base_overlap). Stopping extension" if ($verbose);
+               $extended = 0;
+            }else{
+               ###Added R.Warren 5/5/2010
+               if($temp_sequence_portion =~ /\.(\-*)?$/){### will not extend a contig with 3' consensus bases if no reads overlap them (mitigate assembly errors)
+                  $consensus = substr($consensus,0,length($consensus)-length($1));
+               }
+
+               ###
+               $seq .= $consensus;   ##### contig extension
+               print "New Contig is: $seq\n" if ($verbose);
+               $extended = 1;
+            }
+         }else{### no consensus built, will stop the extension
+            $extended = 0;
+         }
+
+      }###while get the OK for extension
+
+      $trim_ct++;
+      if ($trim_ct <= $max_trim){
+         last TRIM if (length($seq) <= $MIN_READ_LENGTH); #terminate assembly if trimming becomes too agressive
+         $seq = substr($seq, 0, -1);
+         $extended = 1;
+         print "\n$direction EXTENSION ROUND $trim_ct COMPLETE UNTIL $max_trim nt TRIMMED OFF => TRIMMED SEQUENCE:$seq\n\n" if ($verbose);
+      }
+      
+   }### while trimming within bounds
+   #### Adjust the position
+   foreach my $rd (keys %$track){
+      $track->{$rd}{'start'} = length($seq) - $track->{$rd}{'start'} + 1;
+      $track->{$rd}{'end'} = length($seq) - $track->{$rd}{'end'} + 1;
+   }
+   
+   print "\n*** NOTHING ELSE TO BE DONE IN $direction - PERHAPS YOU COULD DECREASE THE MINIMUM OVERLAP -m (currently set to -m $min_overlap) ***\n\n" if ($verbose);
+
+   return $seq, $set, $bin, $reads_needed, $total_bases, $track;
+}
+
+
+#-----------------------
+sub deleteData {
+   my ($bin,$set,$seed,$sequence,$e) = @_;
+   
+   my @o = $sequence =~ /\S{3}/g;
+   my $comp_seq = reverseComplement($sequence);
+   my @c = $comp_seq =~ /\S{3}/g;
+
+   #remove k-mer from hash table and prefix tree
+   delete $bin->{$e->{$o[0]}}{$e->{$o[1]}}{$e->{$o[2]}}{$e->{$o[3]}}{$e->{$o[4]}}{$sequence};
+   delete $bin->{$e->{$c[0]}}{$e->{$c[1]}}{$e->{$c[2]}}{$e->{$c[3]}}{$e->{$c[4]}}{$comp_seq};
+   delete $set->{$sequence};
+
+   return $bin, $set, $seed;
+}
+
+#-----------------------
+sub reverseComplement{
+   $_ = shift;
+   $_ = uc();
+   tr/ATGC/TACG/;
+   return (reverse());
+}
+
+#-----------------
+sub readBAM{
+   my ($sumall,$ctall,$set,$bin,$bamfile,$encoded,$seedsplit,$r_clip,$q_clip,$c_clip,$e_ascii,$file_ct,$ct_fof_line,$targetwordlen) = @_;
+
+   my $ctrd = 0;
+
+   my $readinput_message = "\nCandidate sequence reads imported from file $file_ct/$ct_fof_line, $bamfile:\n";
+   print $readinput_message;
+   print LOG $readinput_message;
+
+   my $ERRLOG = $bamfile.".bampreprocessor.err.log".$$.time();
+
+   my $cmd = "$SAMPATH view -F 512 $bamfile 2>$ERRLOG|";#### only reads that passed QC / QC-failure reads not considered
+   open(BAM, $cmd) || die "unable to open $bamfile\n";
+
+   while(<BAM>){
+      chomp;
+      my @bam=split(/\t+/);
+
+      my $qclipflag = 0;
+      if($bam[10] ne ""){$qclipflag = $r_clip;}
+      ($set,$bin,$ctrd) = &loadSequence($set,$bin,$ctrd,$bam[9],$encoded,$bam[0],$bam[10],$qclipflag,$q_clip,$c_clip,$e_ascii,$targetwordlen) if($bam[9]=~/^[ACGT]*$/);
+
+      my $len = length($bam[9]);
+      $sumall+=$len;
+      $ctall++;
+   }
+
+   close BAM;
+
+   my $read_number_message = "\r$ctrd sequences (" . keys( %$set ) . " unique overall)\n";
+   printf $read_number_message;
+   print LOG $read_number_message;
+
+   return $set,$bin,$sumall,$ctall;
+}
+
+#-----------------
+sub readFastaFastq{
+   my ($sumall,$ctall,$set,$bin,$file,$encoded,$seedsplit,$r_clip,$q_clip,$c_clip,$e_ascii,$file_ct,$ct_fof_line,$targetwordlen) = @_;
+
+   my $ctrd = 0;
+ 
+   my $head = "";
+   my $prev = "";
+   my $quad = 0;
+   my ($seq,$qual) = ("","");
+
+   open(IN,$file) || die "Can't open $file -- fatal\n";
+
+   my $readinput_message = "\nCandidate sequence reads imported from file $file_ct/$ct_fof_line, $file:\n";
+   print $readinput_message;
+   print LOG $readinput_message;
+   
+   LINE:
+   while(<IN>){
+      chomp;
+      $quad++;
+      #print "$quad\n";
+      if($quad==1 || $quad==3){
+         #print "1||3 $_\n";
+         next LINE if($_ eq "+"); 
+         $head = $1 if(/^\S{1}(\S+)/);
+         if($prev ne "" && $head ne $prev){
+            my $qclipflag = 0;
+            if($qual ne ""){$qclipflag = $r_clip;}
+
+            #print "loadSeq: $prev with $seq and $qual\n";
+            ($set,$bin,$ctrd) = &loadSequence($set,$bin,$ctrd,$seq,$encoded,$prev,$qual,$qclipflag,$q_clip,$c_clip,$e_ascii,$targetwordlen) if($seq=~/^[ACGT]*$/);
+            ($seq,$qual) = ("","");
+            $quad=1;
+         }
+         $prev = $head;
+      }elsif($quad==2){
+         #print "SEQ $_\n";
+         $seq = $_;
+
+         ####num
+         my $len = length($seq);
+         $sumall+=$len;
+         $ctall++;
+
+      }elsif($quad==4){
+         #print "QUA $_\n";
+         $qual = $_;
+         $quad=0;
+      }
+   }
+   if($prev ne ""){
+      ($set,$bin,$ctrd) = &loadSequence($set,$bin,$ctrd,$seq,$encoded,$prev,$qual,$r_clip,$q_clip,$c_clip,$e_ascii,$targetwordlen) if($seq=~/^[ACGT]*$/);
+   }
+
+   close IN;
+
+   my $read_number_message = "\r$ctrd sequences (" . keys( %$set ) . " unique overall)\n";
+   printf $read_number_message;
+   print LOG $read_number_message;
+
+   return $set,$bin,$sumall,$ctall;
+}
+
+#-----------------
+### added 31Jan08 R.Warren
+sub loadSeed{
+
+   my ($file,$targetwordlen) = @_;
+   my $seed;  
+   my $seedsplit;
+
+   open(IN,$file) || die "Can't open $file -- fatal\n";
+   
+   my ($subseq,$prev)=('','');
+
+   while(<IN>){
+      chomp;
+
+      if (/\>(\S+)/){
+         my $head=$1;
+         my $subseq_length = length($subseq);
+         $MAX=$subseq_length if ($subseq_length > $MAX);
+         if($head ne $prev && $subseq ne '' && $subseq_length >= $MIN_READ_LENGTH && $subseq_length >= $min_overlap){
+            my $ucsub = uc($subseq);
+            $seed->{$ucsub}{'count'}++;
+            $seed->{$ucsub}{'names'}{$prev}="";
+            $seed->{$ucsub}{'seed_name'}=$prev;
+            $seed->{$ucsub}{'ori'}=$subseq;
+            for(my $pos==0;$pos<=($subseq_length-$targetwordlen);$pos++){
+               my $word=substr($ucsub,$pos,$targetwordlen);
+               my $word_rc = reverseComplement($word);
+               $seedsplit->{$word}=1;
+               $seedsplit->{$word_rc}=1;
+            }
+
+            if($subseq=~/([NX])/i){print "WARNING: the fasta sequence >$prev in your seed file contains characters other than ACGT (i.e. $1) and may prevent proper contig extension.\n";}
+         }
+         $subseq='';
+         $prev=$head;
+      }elsif(/^([ACGTNX]*)$/i){
+         $subseq .= $_;
+      }
+   }
+   my $subseq_length = length($subseq);
+   $MAX=$subseq_length if ($subseq_length > $MAX);
+   if($subseq ne '' && $subseq_length >= $MIN_READ_LENGTH && $subseq_length >= $min_overlap){
+      my $ucsub = uc($subseq);
+      $seed->{$ucsub}{'count'}++;
+      $seed->{$ucsub}{'names'}{$prev}="";
+      $seed->{$ucsub}{'seed_name'}=$prev;
+      $seed->{$ucsub}{'ori'}=$subseq;
+      for(my $pos==0;$pos<= ($subseq_length-$targetwordlen);$pos++){
+         my $word=substr($ucsub,$pos,$targetwordlen);
+         my $word_rc = reverseComplement($word);
+         $seedsplit->{$word}=1;
+         $seedsplit->{$word_rc}=1;
+      }
+
+      if($subseq=~/([NX])/i){print "WARNING: the fasta sequence >$prev in your seed file contains characters other than ACGT (i.e. $1) and may prevent proper contig extension.\n";}
+   }
+   
+   close IN;
+
+   return $seed,$seedsplit;
+}
+
+#-----------------
+sub loadSequence{
+   my ($set,$bin,$ctrd,$seq,$e,$head,$qual,$r_clip,$q_clip,$c_clip,$e_ascii,$targetwordlen) = @_;
+
+   if($r_clip){
+      my $rl=length($seq);
+      my $concat = "";
+      my @quaarray = split(//,$qual);
+
+      foreach my $q_ascii (@quaarray){
+         my $phred = ord($q_ascii) - $e_ascii;
+         if($phred < $q_clip){
+            $concat .= "x";
+         }else{
+            $concat .= "-";
+         }
+      }
+
+      if($concat=~ /(\-{$c_clip,$rl})/g){
+         my $coo = 0;
+         $coo = pos $concat;
+         my $length=length($1);
+         my $start = $coo-$length;
+         $seq = substr($seq,$start,$length);
+         $qual = substr($qual,$start,$length);
+      }
+   }
+
+   my $orig = uc($seq);
+   my $orig_mer = length($orig);
+
+   if ($orig ne '' && $orig_mer >= $MIN_READ_LENGTH && $orig_mer >= $min_overlap){
+
+      my @f = $orig =~ /\S{3}/g;
+
+      my $rc = reverseComplement($orig);
+      my @r = $rc =~ /\S{3}/g;
+
+      my $firstfifteen_f = substr($orig,0,$targetwordlen);
+      my $firstfifteen_r = substr($rc,0,$targetwordlen); 
+
+      ### added 31Jan08 R.Warren
+      $MAX=$orig_mer if ($orig_mer > $MAX);
+
+      if(defined $seedsplit->{$firstfifteen_f} || defined $seedsplit->{$firstfifteen_r}){
+
+         $set->{$orig}{'count'}++;
+         $set->{$orig}{'names'}{$head}=$qual;
+         $bin->{$e->{$f[0]}}{$e->{$f[1]}}{$e->{$f[2]}}{$e->{$f[3]}}{$e->{$f[4]}}{$orig}++;
+         $bin->{$e->{$r[0]}}{$e->{$r[1]}}{$e->{$r[2]}}{$e->{$r[3]}}{$e->{$r[4]}}{$rc}++;
+         $ctrd++;
+         print "\r$ctrd";
+         $|++;
+      }
+   }
+  
+   $MAX = $MAX_TOP if ($MAX > $MAX_TOP);
+   return $set,$bin,$ctrd;
+}
+
+#-----------------
+sub encodeBases{
+
+   my $encoded;
+
+   my @pos1= ('A','C','G','T');
+   my @pos2 = @pos1;
+   my @pos3 = @pos1;
+ 
+   my $ascii_num = 33;
+
+   foreach my $p1 (@pos1){
+      foreach my $p2 (@pos2){
+         foreach my $p3 (@pos3){
+            my $codon = $p1.$p2.$p3;
+            #$num  = ord($char);
+            my $char = chr($ascii_num);
+            $encoded->{$codon}=$char;
+            $ascii_num++;
+         } 
+      }
+   }
+   return $encoded;
+}
+
+## We hope this code is useful to you -- Please send comments & suggestions to rwarren at bcgsc.ca

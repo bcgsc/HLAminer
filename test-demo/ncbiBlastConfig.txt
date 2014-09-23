@@ -1,0 +1,2 @@
+program:/home/pubseq/BioSw/BLAST2/blast-2.2.22/bin/blastall
+options:-a 8 -F F -p blastn -m 7
