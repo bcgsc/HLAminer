@@ -85,7 +85,7 @@ Added support for predictions from direct alignment of single-end reads
 
 ###INSTALL
 =======
-<code>
+<pre>
 1. Download and decompress the tar ball
 gunzip HLAminer_v1-3.tar.gz 
 tar -xvf HLAminer_v1-3.tar
@@ -97,7 +97,7 @@ tar -xvf HLAminer_v1-3.tar
 
 3. Read the docs in the ./docs/ folder
 4. Change/Add/Adjust the perl shebang line of each .pl and .sh script in the ./bin/ folder as needed
-</code>
+</pre>
 From direct Read Alignment (HPRA, faster but less accurate):
 HPRArnaseq_classI.sh
 HPRArnaseq_classI-II.sh
@@ -185,14 +185,14 @@ change path to blast in ncbiconfig.txt
 
 ###install homebrew
 ----------------
-<code>
+<pre>
 ruby -e "$(curl -fsSL
 https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 Since databases were indexed with older
 version, had to re-index:
 bwa index -a is HLA_ABC_CDS.fasta
-</code>
+</pre>
 
 change path to bwa in HPRA* shell scripts
 
@@ -201,14 +201,14 @@ change path to bwa in HPRA* shell scripts
 ====================
 
 The shell scripts are set to filter out short (<200) contigs that would blur HPTAR predictions.  Feel free to adjust as you see fit.
-<code>
+<pre>
 Likewise, HLAminer.pl runs with the set defaults:
 -z minimum contig size.......................<200> (HPTASR)
 -i minimum % sequence identity...............<99>  (HPTASR / HPRA)
 -q minimum log10 (phred-like) expect value...<30>  (HPTASR / HPRA)
 -s minimum score.............................<1000> (HPTASR / HPRA)
 -n consider null alleles (1=yes/0=no)........<0> (HPTASR / HPRA)
-</code>
+</pre>
 
 The minimum sequence identity applies to the short read paired alignment or blast alignment, depending on the choice made.  HLA predictions with a phred-like expect value lower than -q or a score lower than -s will not be diplayed.  Because IMGT/HLA reports numerous null alleles, an option exist to consider or not these unexpressed alleles. 
 
@@ -226,26 +226,26 @@ Follow these instructions to download updated HLA sequences from ebi/imgt (shell
 1) Coding HLA sequences
 
 HLA CDS sequences from:
-<code>
+<pre>
 wget ftp://ftp.ebi.ac.uk/pub/databases/imgt/mhc/hla/fasta/A_nuc.fasta
 wget ftp://ftp.ebi.ac.uk/pub/databases/imgt/mhc/hla/fasta/B_nuc.fasta
 wget ftp://ftp.ebi.ac.uk/pub/databases/imgt/mhc/hla/fasta/C_nuc.fasta
 cat A_nuc.fasta B_nuc.fasta C_nuc.fasta | perl -ne 'chomp;if(/\>\S+\s+(\S+)/){print ">$1\n";}else{print "$_\n";}' > HLA_ABC_CDS.fasta
 ../bin/formatdb -p F -i HLA_ABC_CDS.fasta
 /home/pubseq/BioSw/bwa/bwa-0.5.9/bwa index -a is HLA_ABC_CDS.fasta
-</code>
+</pre>
 
 2) HLA genomic sequences 
 
 To make the HLA genomic sequence database, execute these unix commands:
-<code>
+<pre>
 wget ftp://ftp.ebi.ac.uk/pub/databases/imgt/mhc/hla/fasta/A_gen.fasta
 wget ftp://ftp.ebi.ac.uk/pub/databases/imgt/mhc/hla/fasta/B_gen.fasta
 wget ftp://ftp.ebi.ac.uk/pub/databases/imgt/mhc/hla/fasta/C_gen.fasta
 cat A_gen.fasta B_gen.fasta C_gen.fasta | perl -ne 'chomp;if(/\>\S+\s+(\S+)/){print ">$1\n";}else{print "$_\n";}' > HLA_ABC_GEN.fasta
 ../bin/formatdb -p F -i HLA_ABC_GEN.fasta
 /home/pubseq/BioSw/bwa/bwa-0.5.9/bwa index -a is HLA_ABC_GEN.fasta
-</code>
+</pre>
 
 FOR YOUR CONVENIENCE, A SINGLE SHELL SCRIPT CAN BE RUN FROM ../database TO
 UPDATE ALL IMGT-HLA SEQUENCE DATABASES AND CREATE BWA/BLAST INDEXES. JUST KEEP
