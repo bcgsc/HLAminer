@@ -1,0 +1,3 @@
+program:/Users/rwarren/biosw/ncbi-blast-2.2.29+/bin/blastn
+options:-outfmt 5 -num_threads 2 -max_target_seqs 250
+alignments:-max_target_seqs 5
