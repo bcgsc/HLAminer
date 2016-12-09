@@ -49,7 +49,7 @@ getopts('f:m:o:v:r:z:s:t:b:c:q:n:e:u:i:a:k:w:');
 ###DEFAULT VALUES, PLEASE CHANGE AS NEEDED or USE PROMPT TO ALTER
 my ($targetwordlen,$base_overlap,$min_overlap,$verbose,$MIN_READ_LENGTH,$SEQ_SLIDE,$min_base_ratio,$max_trim,$base_name,$max_count_trim,$min_tig_overlap,$space_restriction,$r_clip,$q_clip,$c_clip,$e_ascii,$reuse,$independent,$min_depth_of_coverage)=(15,2,20,0,21,1,0.7,0,"",10,20,1,0,10,30,33,0,1,0);
 
-my $version = "[v1.6.1]";
+my $version = "[v1.6.2]";
 my $per;
 my $MAX = 0;
 my $MAX_TOP = 1500; # this is the very maximum anchoring edge sequence that will be searched (designed for use with -s to prevent long searches)
@@ -61,7 +61,7 @@ my $SAMPATH = "/home/pubseq/BioSw/samtools/0.1.8/samtools"; ### default location
 
 if(! $opt_f || ! $opt_s){
    print "Usage: $0 $version\n";
-   print "-f  File of filenames (FOF) corresponding to .fasta, .fastq or .bam files with NGS reads to interrogate\n";
+   print "-f  File of filenames (FOF) corresponding to .fasta, .fastq or .bam files with NGS reads (bz2/gz/zip support) to interrogate\n";
    print " -a Full path to samtools (required only if .bam files listed in FOF)\n";
    print "-s  Fasta file containing sequences to use as targets exclusively\n";
    print "-w  Minimum depth of coverage allowed for contigs (e.g. -w 1 = process all reads [original behavior], required)\n";
@@ -70,7 +70,7 @@ if(! $opt_f || ! $opt_s){
    print "-r  Minimum base ratio used to accept a overhang consensus base (default -r $min_base_ratio)\n";
    print "-k  Target sequence word size to hash (default -k $targetwordlen)\n";
    print "-u  Re-use NGS reads (-u 0 = no, default = yes, optional)\n";
-   print "-i  Independent (de novo) assembly  i.e Targets used to recruit reads for de novo assembly, not guide/seed reference-based assemblies (-i 1 = yes, default = no, optional)\n";
+   print "-i  Independent (de novo) assembly  i.e Targets used to recruit reads for de novo assembly, not guide/seed reference-based assemblies (-i 1 = yes (default), 0 = no, optional)\n";
    print "  Note: if -i is set to 1, -u will be forced-set to 0 (not re-using reads)\n";
 #  print "-t  Trim up to -t base(s) on the contig end when all possibilities have been exhausted for an extension (default -t $max_trim, optional)\n";
    print "-c  Quality-clip candidate reads (-c 1 = yes, default = no, optional)\n";
@@ -95,7 +95,8 @@ $q_clip = $opt_q if($opt_q);
 $c_clip = $opt_n if($opt_n);
 $e_ascii = $opt_e if($opt_e);
 $reuse = $opt_u if($opt_u);
-$independent = $opt_i if($opt_i);
+$independent = $opt_i;
+$independent = 1 if($independent > 1 || $independent < 0);
 $reuse = 0 if($independent);
 $SAMPATH = $opt_a if($opt_a);
 $targetwordlen = $opt_k if($opt_k);
@@ -865,7 +866,16 @@ sub readFastaFastq{
    my $quad = 0;
    my ($seq,$qual) = ("","");
 
-   open(IN,$file) || die "Can't open $file -- fatal\n";
+   ###Support for compressed files MAR/DEC2016
+   if($file=~/zip$/i){
+      open(IN,"unzip -p $file|") || die "Error reading $file -- fatal\n";
+   }elsif($file=~/gz$/i || $file=~/gzip$/i){
+      open(IN,"gunzip -c $file|") || die "Error reading $file -- fatal\n";
+   }elsif($file=~/bz2$/i){
+      open(IN,"bunzip2 -c $file|") || die "Error reading $file -- fatal\n";
+   }else{
+      open(IN,$file) || die "Error reading $file -- fatal\n";
+   }
 
    my $readinput_message = "\nCandidate sequence reads imported from file $file_ct/$ct_fof_line, $file:\n";
    print $readinput_message;
