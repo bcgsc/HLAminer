@@ -23,7 +23,7 @@
 7. [DATABASES](#DATABASES)
 8. [AUTHORS](#AUTHORS)
 9. [CITING](#CITING)
-10.[FULL LICENSE](#FULL)
+10. [FULL LICENSE](#FULL)
 --------
 ### SYNOPSIS <a name="SYNOPSIS"></a>
 --------
@@ -318,7 +318,7 @@ the likelihood of a base being correct.
 Predictions/read pair are ambiguous when there are multiple predicted allele groups and/or protein coding alleles with the same score.
 
 
-### AUTHOR <a name="AUTHOR"></a>
+### AUTHORS <a name="AUTHORS"></a>
 --------
 
 <pre>
