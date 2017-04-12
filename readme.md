@@ -15,7 +15,6 @@
 
 ### CONTENTS
 --------
-<pre>
   [SYNOPSIS](#SYNOPSIS)
   [LICENSE](#LICENSE)
   [OVERVIEW](#OVERVIEW)
@@ -25,7 +24,6 @@
   [DATABASES](#DATABASES)
   [AUTHORS](#AUTHORS)
   [CITING](#CITING)
-</pre>
 --------
 ### SYNOPSIS
 --------
