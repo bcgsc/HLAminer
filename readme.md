@@ -1,6 +1,7 @@
 # HLAminer
 
-## HLAminer v1.3.4 Rene L. Warren (c) 2011-2016 
+## HLAminer v1.3.4
+## Rene L. Warren (c) 2011-2016 
 ## email: rwarren [at] bcgsc [dot] ca
 ## Visit www.bcgsc.ca/bioinfo/software/hlaminer for additional information
 
@@ -15,15 +16,15 @@
 ### CONTENTS
 --------
 <pre>
-  SYNOPSIS
-  LICENSE
-  OVERVIEW
-  DESCRIPTION
-  INSTALL
-  COMMANDS AND OPTIONS
-  DATABASES
-  AUTHORS
-  CITING
+  [SYNOPSIS] (#SYNOPSIS)
+  [LICENSE] (#LICENSE)
+  [OVERVIEW] (#OVERVIEW)
+  [DESCRIPTION] (#DESCRIPTION)
+  [INSTALL] (#INSTALL)
+  [COMMANDS AND OPTIONS] (#COMMANDS AND OPTIONS)
+  [DATABASES] (#DATABASES)
+  [AUTHORS] (#AUTHORS)
+  [CITING] (#CITING)
 </pre>
 --------
 ### SYNOPSIS
@@ -38,7 +39,7 @@
 ### LICENSE
 --------
 
-  HLAminer Copyright  (c) 2011-2016 Canada's Michael Smith Genome Science Centre.  All rights reserved.
+  HLAminer Copyright (c) 2011-2016 Canada's Michael Smith Genome Science Centre.  All rights reserved.
   TASR Copyright   (c) 2010-2016 Canada's Michael Smith Genome Science Centre.  All rights reserved.
   SSAKE Copyright  (c) 2006-2016 Canada's Michael Smith Genome Science Centre.  All rights reserved.
    
@@ -322,9 +323,10 @@ Predictions/read pair are ambiguous when there are multiple predicted allele gro
 ### AUTHOR
 --------
 
+<pre>
 Rene Warren
 rwarren at bcgsc.ca
-
+</pre>
 
 ### CITING 
 --------
