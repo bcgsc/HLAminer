@@ -15,17 +15,18 @@
 
 ### CONTENTS
 --------
-  [SYNOPSIS](#SYNOPSIS)
-  [LICENSE](#LICENSE)
-  [OVERVIEW](#OVERVIEW)
-  [DESCRIPTION](#DESCRIPTION)
-  [INSTALL](#INSTALL)
-  [COMMANDS AND OPTIONS](#COMMANDS AND OPTIONS)
-  [DATABASES](#DATABASES)
-  [AUTHORS](#AUTHORS)
-  [CITING](#CITING)
+1. [SYNOPSIS](#SYNOPSIS)
+2. [LICENSE](#LICENSE)
+3. [OVERVIEW](#OVERVIEW)
+4. [DESCRIPTION](#DESCRIPTION)
+5. [INSTALL](#INSTALL)
+6. [COMMANDS AND OPTIONS](#COMMANDS)
+7. [DATABASES](#DATABASES)
+8. [AUTHORS](#AUTHORS)
+9. [CITING](#CITING)
+10.[FULL LICENSE](#FULL)
 --------
-### SYNOPSIS
+### SYNOPSIS <a name="SYNOPSIS"></a>
 --------
   For RNAseq:
   1. Copy ./test-demo/    eg. cp -rf test-demo foo
@@ -34,7 +35,7 @@
      For HLA Predictions by Read Alignment: execute ./HLAminer/foo/HPRArnaseq.sh
 
 
-### LICENSE
+### LICENSE <a name="LICENSE"></a>
 --------
 
   HLAminer Copyright (c) 2011-2016 Canada's Michael Smith Genome Science Centre.  All rights reserved.
