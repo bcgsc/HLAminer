@@ -1,7 +1,6 @@
 # HLAminer
 
-## HLAminer v1.3.4
-## Rene L. Warren (c) 2011-2016 
+## HLAminer v1.3.4 Rene L. Warren (c) 2011-2016 
 ## email: rwarren [at] bcgsc [dot] ca
 ## Visit www.bcgsc.ca/bioinfo/software/hlaminer for additional information
 
@@ -52,7 +51,7 @@
   terms of the GNU General Public License
 
 
-### OVERVIEW
+### OVERVIEW <a name="OVERVIEW"></a>
 --------
 
 Derivation of HLA class I and class II predictions from shotgun sequence datasets (HLAminer) by:
@@ -60,7 +59,7 @@ Derivation of HLA class I and class II predictions from shotgun sequence dataset
 2) Read Alignment (HPRA)
 
 
-### DESCRIPTION
+### DESCRIPTION <a name="DESCRIPTION"></a>
 --------
 
 The HLA prediction by targeted assembly of short sequence reads (HPTASR), performs targeted de novo assembly of HLA NGS reads and align them to reference HLA alleles from the IMGT/HLA sequence repository using commodity hardware with standard specifications (<2GB RAM, 2GHz).  Putative HLA types are inferred by mining and scoring the contig alignments and an expect value is determined for each.  The method is accurate, simple and fast to execute and, for transcriptome data, requires low depth of coverage. Known HLA class I/class II reference sequences available from the IMGT/HLA public repository are read by TASR using default options (Warren and Holt 2011) to create a hash table of all possible 15 nt words (k-mers) from these reference sequences. Note that this parameter is customizable and larger k values will yield predictions with increased specificity (at the possible expense of sensitivity). Subsequently, NGS data sets are interrogated for the presence of one of these kmers (on either strand) at the 5’ or 3’ start. Whenever an HLA word is identified, the read is recruited as a candidate for de novo assembly. Upon de novo assembly of all recruited reads, a set of contigs is generated.  Only sequence contigs equal or larger than 200nt in length are considered for further analysis, as longer contigs better resolve HLA allelic variants.  Reciprocal BLASTN alignments are performed between the contigs and all HLA allelic reference sequences. HPTASR mines the alignments, scoring each possible HLA allele identified, computing and reporting an expect value (E-value) based on the chance of contigs characterizing given HLA alleles and, reciprocally, the chance of reference HLA alleles aligning best to certain assembled contig sequences
@@ -85,7 +84,7 @@ Corrected shell script that download HLA sequences to reflect change of location
 Added support for predictions from direct alignment of single-end reads
 
 
-### INSTALL
+### INSTALL <a name="INSTALL"></a>
 --------
 <pre>
 1. Download and decompress the tar ball
@@ -199,7 +198,7 @@ bwa index -a is HLA_ABC_CDS.fasta
 change path to bwa in HPRA* shell scripts
 
 
-### COMMANDS AND OPTIONS
+### COMMANDS AND OPTIONS <a name="COMMANDS"></a>
 --------
 
 The shell scripts are set to filter out short (<200) contigs that would blur HPTAR predictions.  Feel free to adjust as you see fit.
@@ -219,7 +218,7 @@ improved by using larger k values for assembly (-k). Experimentation for
 choosing the ideal k to use depends on the input read length and is warranted. 
 
 
-### DATABASES
+### DATABASES <a name="DATABASES"></a>
 
 Follow these instructions to download updated HLA sequences from ebi/imgt (shell scripts to automatically download and format the databases exist in ./database/) and refer to README.txt in the ./database directory:
 
@@ -268,7 +267,7 @@ file:
 http://hla.alleles.org/wmda/hla_nom_p.txt
 
 
-### OUTPUT FILES
+### OUTPUT FILES <a name="OUTPUT"></a>
 --------
 
 HLA predictions from read pair alignments:
@@ -319,7 +318,7 @@ the likelihood of a base being correct.
 Predictions/read pair are ambiguous when there are multiple predicted allele groups and/or protein coding alleles with the same score.
 
 
-### AUTHOR
+### AUTHOR <a name="AUTHOR"></a>
 --------
 
 <pre>
@@ -327,7 +326,7 @@ Rene Warren
 rwarren at bcgsc.ca
 </pre>
 
-### CITING 
+### CITING <a name="CITING"></a>
 --------
 
 Thank you for using, developing and promoting this free software.
@@ -342,7 +341,7 @@ http://genomemedicine.com/content/4/12/95/abstract
 </pre>
 
 
-### LICENSE AGREEMENT
+### LICENSE AGREEMENT <a name="FULL"></a>
 -----------------------------------------------------------
 BC CANCER AGENCY SOFTWARE LICENSE AGREEMENT (ACADEMIC USE)
 
