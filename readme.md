@@ -14,6 +14,7 @@
 
 ### CONTENTS
 --------
+<pre>
   SYNOPSIS
   LICENSE
   OVERVIEW
@@ -22,8 +23,8 @@
   COMMANDS AND OPTIONS
   DATABASES
   AUTHORS
-  SEE ALSO
-
+  CITING
+</pre>
 --------
 ### SYNOPSIS
 --------
@@ -325,8 +326,11 @@ Rene Warren
 rwarren at bcgsc.ca
 
 
-### SEE ALSO
+### CITING 
 --------
+
+Thank you for using, developing and promoting this free software.
+If you use HLAminer for you research, please cite:
 
 <pre>
 Warren RL, Choe G, Freeman DJ, Castellarin M, Munro S, Moore R, Holt 
