@@ -1,17 +1,19 @@
-#HLAminer
+# HLAminer
 
-##HLAminer v1.3.4 Rene L. Warren (c) 2011-2016 
-##email: rwarren [at] bcgsc [dot] ca
-##Visit www.bcgsc.ca/bioinfo/software/hlaminer for additional information
+## HLAminer v1.3.4 Rene L. Warren (c) 2011-2016 
+## email: rwarren [at] bcgsc [dot] ca
+## Visit www.bcgsc.ca/bioinfo/software/hlaminer for additional information
 
 
-###Manual Reference Pages – HLAminer - Derivation of HLA class I and class II predictions from shotgun sequence datasets
+### Manual Reference Pages – HLAminer - Derivation of HLA class I and class II predictions from shotgun sequence datasets
 * This manual assumes that you have a working knowledge of unix, and some shell and perl scripting experience
 
-###NAME
+### NAME
+--------
   HLAminer - Derivation of HLA class I and class II predictions from shotgun sequence datasets
 
-CONTENTS
+### CONTENTS
+--------
   SYNOPSIS
   LICENSE
   OVERVIEW
@@ -23,9 +25,8 @@ CONTENTS
   SEE ALSO
 
 --------
-###SYNOPSIS
-========
-
+### SYNOPSIS
+--------
   For RNAseq:
   1. Copy ./test-demo/    eg. cp -rf test-demo foo
   2. In folder "foo", edit the patient.fof file to point to your NGS RNAseq data.  Ensure all paths are ok.
@@ -33,8 +34,8 @@ CONTENTS
      For HLA Predictions by Read Alignment: execute ./HLAminer/foo/HPRArnaseq.sh
 
 
-###LICENSE
-=======
+### LICENSE
+--------
 
   HLAminer Copyright  (c) 2011-2016 Canada's Michael Smith Genome Science Centre.  All rights reserved.
   TASR Copyright   (c) 2010-2016 Canada's Michael Smith Genome Science Centre.  All rights reserved.
@@ -50,24 +51,24 @@ CONTENTS
   terms of the GNU General Public License
 
 
-###OVERVIEW
-========
+### OVERVIEW
+--------
 
 Derivation of HLA class I and class II predictions from shotgun sequence datasets (HLAminer) by:
 1) Targeted Assembly of Shotgun Reads (HPTASR)
 2) Read Alignment (HPRA)
 
 
-###DESCRIPTION
-===========
+### DESCRIPTION
+--------
 
 The HLA prediction by targeted assembly of short sequence reads (HPTASR), performs targeted de novo assembly of HLA NGS reads and align them to reference HLA alleles from the IMGT/HLA sequence repository using commodity hardware with standard specifications (<2GB RAM, 2GHz).  Putative HLA types are inferred by mining and scoring the contig alignments and an expect value is determined for each.  The method is accurate, simple and fast to execute and, for transcriptome data, requires low depth of coverage. Known HLA class I/class II reference sequences available from the IMGT/HLA public repository are read by TASR using default options (Warren and Holt 2011) to create a hash table of all possible 15 nt words (k-mers) from these reference sequences. Note that this parameter is customizable and larger k values will yield predictions with increased specificity (at the possible expense of sensitivity). Subsequently, NGS data sets are interrogated for the presence of one of these kmers (on either strand) at the 5’ or 3’ start. Whenever an HLA word is identified, the read is recruited as a candidate for de novo assembly. Upon de novo assembly of all recruited reads, a set of contigs is generated.  Only sequence contigs equal or larger than 200nt in length are considered for further analysis, as longer contigs better resolve HLA allelic variants.  Reciprocal BLASTN alignments are performed between the contigs and all HLA allelic reference sequences. HPTASR mines the alignments, scoring each possible HLA allele identified, computing and reporting an expect value (E-value) based on the chance of contigs characterizing given HLA alleles and, reciprocally, the chance of reference HLA alleles aligning best to certain assembled contig sequences
 
 The HLA prediction from direct read alignment (HPRA) method is conceptually simpler and faster to execute, since paired reads are aligned up-front to reference HLA alleles.  Alignments from the HPTASR and HPRA methods are processed by the same software (HLAminer.pl) to derive HLA-I predictions by scoring and evaluating the probability of each candidate bearing alignments.
 
 
-###What's new in version 1.3?
-==========================
+### What's new in version 1.3?
+--------
 
 A more concise HLA allele summary in HLAminer_HPTASR.csv and HLAminer_HPRA.csv (associated .log is unchanged and lists all predictions)
 Keeps top two [highest-scoring by HLA group] predictions per gene and only the 'P' designated allele when the summary include HLA Sequences reported to have the same antigen binding domain.
@@ -75,16 +76,16 @@ For the original output, refer to the HLAminer_v1-2.pl included in the ./bin dir
 A prediction example from MCF-7 PacBio RNA-seq reads is also provided
 
 
-###What's new in version 1.2?
-==========================
+### What's new in version 1.2?
+--------
 
 Updated all HLA sequence databases
 Corrected shell script that download HLA sequences to reflect change of location at EBI (ie. fasta sub folder) 
 Added support for predictions from direct alignment of single-end reads
 
 
-###INSTALL
-=======
+### INSTALL
+--------
 <pre>
 1. Download and decompress the tar ball
 gunzip HLAminer_v1-3.tar.gz 
@@ -170,20 +171,20 @@ patient.fof
 ncbiBlastConfig.txt (specific to the version of blast you are using, see in
 ../bin and ../test-demo directories
 
-##ADDITIONAL INSTALL NOTES ON MAC OSX
+### ADDITIONAL INSTALL NOTES ON MAC OSX
 
-###install bioperl
+#### install bioperl
 ---------------
 sudo perl -MCPAN -e shell
 install CJFIELDS/BioPerl-1.6.923.tar.gz
 change shebang line in all PERL (.pl) scripts and location of bioperl on your system in HLAminer.pl
 
-###install ncbi blast
+#### install ncbi blast
 ------------------
 download and install blast-2.2.22-universal-macosx.tar.gz
 change path to blast in ncbiconfig.txt
 
-###install homebrew
+#### install homebrew
 ----------------
 <pre>
 ruby -e "$(curl -fsSL
@@ -197,8 +198,8 @@ bwa index -a is HLA_ABC_CDS.fasta
 change path to bwa in HPRA* shell scripts
 
 
-###COMMANDS AND OPTIONS
-====================
+### COMMANDS AND OPTIONS
+--------
 
 The shell scripts are set to filter out short (<200) contigs that would blur HPTAR predictions.  Feel free to adjust as you see fit.
 <pre>
@@ -217,8 +218,7 @@ improved by using larger k values for assembly (-k). Experimentation for
 choosing the ideal k to use depends on the input read length and is warranted. 
 
 
-###DATABASES
-=========
+### DATABASES
 
 Follow these instructions to download updated HLA sequences from ebi/imgt (shell scripts to automatically download and format the databases exist in ./database/) and refer to README.txt in the ./database directory:
 
@@ -267,8 +267,8 @@ file:
 http://hla.alleles.org/wmda/hla_nom_p.txt
 
 
-###OUTPUT FILES
-============
+### OUTPUT FILES
+--------
 
 HLA predictions from read pair alignments:
 
@@ -318,15 +318,15 @@ the likelihood of a base being correct.
 Predictions/read pair are ambiguous when there are multiple predicted allele groups and/or protein coding alleles with the same score.
 
 
-###AUTHOR
-=======
+### AUTHOR
+--------
 
 Rene Warren
 rwarren at bcgsc.ca
 
 
-###SEE ALSO
-========
+### SEE ALSO
+--------
 
 <pre>
 Warren RL, Choe G, Freeman DJ, Castellarin M, Munro S, Moore R, Holt 
@@ -337,8 +337,7 @@ http://genomemedicine.com/content/4/12/95/abstract
 </pre>
 
 
-###LICENSE AGREEMENT
-=================
+### LICENSE AGREEMENT
 -----------------------------------------------------------
 BC CANCER AGENCY SOFTWARE LICENSE AGREEMENT (ACADEMIC USE)
 
