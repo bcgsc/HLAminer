@@ -47,6 +47,8 @@
   http://www.bcgsc.ca/platform/bioinfo/license/bcca_2010
   and at the bottom of this readme file
 
+  For commercial licensing options, please contact Patrick Rebstein prebstein@bccancer.bc.ca
+
   Software components of HLAminer (eg. TASR) are still distributed under the
   terms of the GNU General Public License
 
