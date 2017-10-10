@@ -1,6 +1,6 @@
 # HLAminer
 
-## HLAminer v1.3.4 Rene L. Warren (c) 2011-2016 
+## HLAminer v1.3.1 Rene L. Warren (c) 2011-2017 
 ## email: rwarren [at] bcgsc [dot] ca
 ## Visit www.bcgsc.ca/bioinfo/software/hlaminer for additional information
 
@@ -37,9 +37,9 @@
 ### LICENSE <a name="LICENSE"></a>
 --------
 
-  HLAminer Copyright (c) 2011-2016 Canada's Michael Smith Genome Science Centre.  All rights reserved.
-  TASR Copyright   (c) 2010-2016 Canada's Michael Smith Genome Science Centre.  All rights reserved.
-  SSAKE Copyright  (c) 2006-2016 Canada's Michael Smith Genome Science Centre.  All rights reserved.
+  HLAminer Copyright (c) 2011-2017 Canada's Michael Smith Genome Science Centre.  All rights reserved.
+  TASR Copyright   (c) 2010-2017 Canada's Michael Smith Genome Science Centre.  All rights reserved.
+  SSAKE Copyright  (c) 2006-2017 Canada's Michael Smith Genome Science Centre.  All rights reserved.
    
   Due to the clinical implications of HLAminer, the code is now released
   under the BC Cancer Agency software license agreement (academic use).

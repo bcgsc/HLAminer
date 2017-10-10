@@ -94,7 +94,7 @@ while( my $result = $in->next_result ) {
       if ($identity >= $id_cutoff)
       {
 
-        if($hsp->query->strand == -1 ){
+        if($hsp->hit->strand == -1 ){
              $direct="-";
         }else{
              $direct="+";
