@@ -1,0 +1,3 @@
+program:../bin/blastall
+options:-a 2 -F F -p blastn -m 7
+alignments:-b 5 -v 5

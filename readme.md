@@ -1,8 +1,6 @@
-![Logo](https://github.com/warrenlr/hlaminer/blob/master/hlaminer-logo.png)
-
 # HLAminer
 
-## HLAminer v1.3.1 Rene L. Warren (c) 2011-2017 
+## HLAminer v1.4 Rene L. Warren (c) 2011-2018
 ## email: rwarren [at] bcgsc [dot] ca
 ## Visit www.bcgsc.ca/bioinfo/software/hlaminer for additional information
 
@@ -22,14 +20,20 @@
 4. [DESCRIPTION](#DESCRIPTION)
 5. [INSTALL](#INSTALL)
 6. [COMMANDS AND OPTIONS](#COMMANDS)
-7. [DATABASES](#DATABASES)
-8. [AUTHORS](#AUTHORS)
-9. [CITING](#CITING)
-10. [FULL LICENSE](#FULL)
+7. [PREDICTING FROM NANOPORE READS] (#NANOPORE)
+8. [DATABASES](#DATABASES)
+9. [AUTHORS](#AUTHORS)
+10. [CITING](#CITING)
+11. [FULL LICENSE](#FULL)
 --------
 ### SYNOPSIS <a name="SYNOPSIS"></a>
 --------
-  For RNAseq:
+
+  HLAminer is a pipeline for predicting HLA from shotgun sequence data (ie. whole genome, whole transcriptome, exome), at the group and allele resolution.
+  It supports predictions from a variety of DNA sequencing technologies including those from Illumina, PacBio and Oxford Nanopore.   
+  Predictions are either derived from targeted assembly or direct alignment.
+
+  For quick tests on Illumina RNA-seq data:
   1. Copy ./test-demo/    eg. cp -rf test-demo foo
   2. In folder "foo", edit the patient.fof file to point to your NGS RNAseq data.  Ensure all paths are ok.
   3. For HLA Predictions by Targeted Assembly of Shotgun Reads: execute ./HLAminer/foo/HPTASRrnaseq.sh 
@@ -39,9 +43,9 @@
 ### LICENSE <a name="LICENSE"></a>
 --------
 
-  HLAminer Copyright (c) 2011-2017 Canada's Michael Smith Genome Science Centre.  All rights reserved.
-  TASR Copyright   (c) 2010-2017 Canada's Michael Smith Genome Science Centre.  All rights reserved.
-  SSAKE Copyright  (c) 2006-2017 Canada's Michael Smith Genome Science Centre.  All rights reserved.
+  HLAminer Copyright (c) 2011-2018 Canada's Michael Smith Genome Science Centre.  All rights reserved.
+  TASR Copyright   (c) 2010-2018 Canada's Michael Smith Genome Science Centre.  All rights reserved.
+  SSAKE Copyright  (c) 2006-2018 Canada's Michael Smith Genome Science Centre.  All rights reserved.
    
   Due to the clinical implications of HLAminer, the code is now released
   under the BC Cancer Agency software license agreement (academic use).
@@ -71,6 +75,14 @@ The HLA prediction by targeted assembly of short sequence reads (HPTASR), perfor
 The HLA prediction from direct read alignment (HPRA) method is conceptually simpler and faster to execute, since paired reads are aligned up-front to reference HLA alleles.  Alignments from the HPTASR and HPRA methods are processed by the same software (HLAminer.pl) to derive HLA-I predictions by scoring and evaluating the probability of each candidate bearing alignments.
 
 
+### What's new in version 1.4?
+--------
+
+Ability to stream the (.sam) output of modern read  aligners, directly into HLAminer.
+Initial support for predicting HLA types from long nanopore reads such as those from Oxford Nanopore Technologies.
+Better information/sub-routine/date tracking in hlaminer 
+
+
 ### What's new in version 1.3?
 --------
 
@@ -92,8 +104,8 @@ Added support for predictions from direct alignment of single-end reads
 --------
 <pre>
 1. Download and decompress the tar ball
-gunzip HLAminer_v1-3.tar.gz 
-tar -xvf HLAminer_v1-3.tar
+gunzip HLAminer_v1-4.tar.gz 
+tar -xvf HLAminer_v1-4.tar
 2. Make sure you see the following directories:
 ./bin
 ./databases
@@ -201,12 +213,38 @@ bwa index -a is HLA_ABC_CDS.fasta
 
 change path to bwa in HPRA* shell scripts
 
+TEST YOUR INSTALL BY RUNNING THE SCRIPT IN test-demo. CONSULT THE README-FIRST.txt FILE
+
 
 ### COMMANDS AND OPTIONS <a name="COMMANDS"></a>
 --------
 
-The shell scripts are set to filter out short (<200) contigs that would blur HPTAR predictions.  Feel free to adjust as you see fit.
 <pre>
+
+Usage: ../bin/HLAminer.pl [v1.4]
+Derivation of HLA class I and II predictions from shotgun sequence datasets
+--------------------------------------------------------------------
+HPTASR (HLA Predictions by Targeted Assembly of Shotgun Reads):
+-b blastn alignments.........................<tig_vs_hla-ncbi.coord>
+-r reciprocal blastn.........................<hla_vs_tig-ncbi.coord>
+-c contig fasta file.........................<TASRhla200.contigs>
+-z minimum contig size.......................<200>
+------------------------------- OR ---------------------------------
+HPRA (HLA Predictions by Read Alignment):
+-a sam alignments............................< -a ngs_vs_hla.sam > or < -a stream >
+-e single-end reads used (1=yes/0=no)........<0>
+--------------------------------------------------------------------
+-h hla fasta file............................<HLA_ABC_CDS.fasta>
+-p P-designation file........................<hla_nom_p.txt>
+-i minimum % sequence identity...............<99>
+-q minimum log10 (phred-like) expect value...<30>
+-s minimum score.............................<1000>
+-n consider null alleles (1=yes/0=no)........<0>
+-l label (run name) -optional-
+
+
+The shell scripts are set to filter out short (<200) contigs that would blur HPTAR predictions.  Feel free to adjust as you see fit.
+
 Likewise, HLAminer.pl runs with the set defaults:
 -z minimum contig size.......................<200> (HPTASR)
 -i minimum % sequence identity...............<99>  (HPTASR / HPRA)
@@ -222,7 +260,31 @@ improved by using larger k values for assembly (-k). Experimentation for
 choosing the ideal k to use depends on the input read length and is warranted. 
 
 
+### PREDICTING FROM NANOPORE READS <a name="NANOPORE"></a>
+--------
+
+HLAminer v1.4 provides initial support for HLA prediction from raw uncorrected shotgun nanopore long reads (such as those from Oxford Nanopore Technologies).
+HLAminer v1.4 implements a streaming approach to reading .sam alignment files, supporting the alignment of GB worth of read data in a few hours and predictions within seconds of alignment completion, without saving costly .sam files to disk.
+
+We tested the software on the NA19240 promethion dataset.
+https://gigabaseorgigabyte.wordpress.com/2018/05/24/promethion-human-genome-na19240/
+with data available from ENA at this location:
+https://www.ebi.ac.uk/ena/data/view/PRJEB26791
+
+1) First, we downloaded read files (ERR2585112 and ERR2585115 from the ENA)
+
+nohup wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR258/005/ERR2585115/ERR2585115.fastq.gz &
+nohup wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR258/002/ERR2585112/ERR2585112.fastq.gz &
+
+2) Then, we predicted HLA by running minimap2 and HLAminer v1.4:
+
+/usr/bin/time -v -o minimap_hlaminerERR2585115-1mod.time minimap2 -t 60 -ax map-ont --MD ../database/GCA_000001405.15_GRCh38_genomic.chr-only-noChr6-HLA-I_II_GEN.fa.gz ERR2585115.fastq.gz | ./HLAminer.pl -h ../database/HLA-I_II_GEN.fasta -s 500 -q 1 -i 1 -p ../database/hla_nom_p.txt -a stream
+
+A test is provided at ./test-demo/HPRAwgs_ONTclassI-IIdemo.sh
+
+
 ### DATABASES <a name="DATABASES"></a>
+--------
 
 Follow these instructions to download updated HLA sequences from ebi/imgt (shell scripts to automatically download and format the databases exist in ./database/) and refer to README.txt in the ./database directory:
 
@@ -258,6 +320,8 @@ UPGRADE, YOU WILL HAVE TO REGENERATE THE INDEXES
 ******************************
 ***../database/updateAll.sh***
 ******************************
+
+Note: For alignment of nanopore genomic reads, we recommend aligning to a file comprised of human genome chromosome and HLA-I and -II alleles to reduce the noise in alignments (especially when running minimap2) 
 
 
 3) P designation files

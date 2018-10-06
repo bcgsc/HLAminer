@@ -1,0 +1,1 @@
+../bin/ncbiBlastConfig2-2-29.txt

@@ -1,0 +1,12 @@
+*This run uses only few pacbio reads that are known to align to HG19 and the HLAminer prediction is provided for comparing your runs against for the sole purpose of testing your install.
+
+It may not (does not) reflect the complete/accurate HLA types of the MCF-7 cell line since it only uses subsets of aligned reads to the mosaic human genome reference.
+
+
+Refer to:
+
+http://datasets.pacb.com.s3.amazonaws.com/2015/IsoSeqHumanMCF7Transcriptome/list.html
+
+Boegel, S. et al. A catalog of HLA type, HLA expression, and neo-epitope candidates in human cancer cell lines, OncoImmunology 3, 8 (2014)
+
+Adams, S. et al. HLA class I and II genotype of the NCI-60 cell lines, J Transl Med 3, 11 (2005).
