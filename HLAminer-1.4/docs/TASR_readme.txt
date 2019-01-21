@@ -182,7 +182,7 @@ Run:
 
 A. Go to ./test
 B. Get ~4M RNA seq reads from a prostate adenocarcinoma sample:
-wget ftp://ftp.bcgsc.ca/supplementary/SSAKE/SRR066437.fastq.bz2
+wget http://www.bcgsc.ca/downloads/supplementary/SSAKE/SRR066437.fastq.bz2
 C. Decompress reads file:
 >bunzip2 SRR066437.fastq.bz2
 D. Notice the file of filename (fof) foobar.fof, which lists SRR066437.fastq
