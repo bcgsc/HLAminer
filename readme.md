@@ -1,3 +1,4 @@
+![Logo](https://github.com/warrenlr/hlaminer/blob/master/hlaminer-logo.png)
 # HLAminer
 
 ## HLAminer v1.4 Rene L. Warren (c) 2011-2018
