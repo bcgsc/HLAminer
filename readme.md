@@ -640,4 +640,6 @@ retain it for Your records.
 (i) You may not assign this Agreement or any of Your rights or
 obligations hereunder without BCCA's prior written consent. BCCA, at
 its sole discretion may assign this Agreement without notice to You.
+
+For commercial licensing options, please contact Patrick Rebstein prebstein@bccancer.bc.ca
 -----------------------------------------------------------
