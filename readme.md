@@ -273,14 +273,14 @@ with data available from ENA at this location:
 https://www.ebi.ac.uk/ena/data/view/PRJEB26791
 
 1) First, we downloaded read files (ERR2585112 and ERR2585115 from the ENA)
-
+<pre>
 nohup wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR258/005/ERR2585115/ERR2585115.fastq.gz &
 nohup wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR258/002/ERR2585112/ERR2585112.fastq.gz &
-
+</pre>
 2) Then, we predicted HLA by running minimap2 and HLAminer v1.4:
-
+<pre>
 /usr/bin/time -v -o minimap_hlaminerERR2585115-1mod.time minimap2 -t 60 -ax map-ont --MD ../database/GCA_000001405.15_GRCh38_genomic.chr-only-noChr6-HLA-I_II_GEN.fa.gz ERR2585115.fastq.gz | ./HLAminer.pl -h ../database/HLA-I_II_GEN.fasta -s 500 -q 1 -i 1 -p ../database/hla_nom_p.txt -a stream
-
+</pre>
 A test is provided at ./test-demo/HPRAwgs_ONTclassI-IIdemo.sh
 
 
