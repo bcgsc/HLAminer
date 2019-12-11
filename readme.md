@@ -1,3 +1,7 @@
+[![Release](https://img.shields.io/github/release/warrenlr/HLAminer.svg)](https://github.com/warrenlr/HLAminer/releases)
+[![Downloads](https://img.shields.io/github/downloads/warrenlr/HLAminer/total?logo=github)](https://github.com/warrenlr/HLAminer/releases/download/v1.4/HLAminer_1-4.tar.gz)
+[![Issues](https://img.shields.io/github/issues/warrenlr/HLAminer.svg)](https://github.com/warrenlr/HLAminer/issues)
+
 ![Logo](https://github.com/warrenlr/hlaminer/blob/master/hlaminer-logo.png)
 # HLAminer
 
@@ -398,7 +402,8 @@ rwarren at bcgsc.ca
 ### CITING <a name="CITING"></a>
 --------
 
-Thank you for using, developing and promoting this free software.
+Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAminer.svg)](https://github.com/warrenlr/HLAminer/stargazers) and for using, developing and promoting this free software.
+
 If you use HLAminer for you research, please cite:
 
 <pre>
