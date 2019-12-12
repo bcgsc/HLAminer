@@ -163,7 +163,7 @@ ftp://ftp.ncbi.nlm.nih.gov/blast/executables/release/
 
 HLAminer.pl
 parseXMLblast.pl
-TASR
+[![link](https://img.shields.io/badge/TASR-github-yellow)](https://github.com/warrenlr/TASR)
 
 5. You must install perl module Bio::SearchIO to use HPTASR
 6. Edit the fullpath location of bwa and other software dependencies in the shell scripts in the ./bin/ folder, as needed
@@ -411,7 +411,7 @@ Warren RL, Choe G, Freeman DJ, Castellarin M, Munro S, Moore R, Holt
 RA.  2012. Derivation of HLA types from shotgun sequence datasets. 
 Genome Med. 4:95
 </pre>
-http://genomemedicine.com/content/4/12/95/abstract
+[![link](https://img.shields.io/badge/HLAminer-manuscript-brightgreen)](http://genomemedicine.com/content/4/12/95/abstract)
 
 
 ### LICENSE AGREEMENT <a name="FULL"></a>
