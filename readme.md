@@ -7,7 +7,6 @@
 
 ## HLAminer v1.4 Rene L. Warren (c) 2011-2020
 ## email: rwarren [at] bcgsc [dot] ca
-## Visit www.bcgsc.ca/bioinfo/software/hlaminer for additional information
 
 
 ### Manual Reference Pages – HLAminer - Derivation of HLA class I and class II predictions from shotgun sequence datasets
@@ -55,7 +54,6 @@
   Due to the clinical implications of HLAminer, the code is now released
   under the BC Cancer Agency software license agreement (academic use).
   Details of the license can be accessed at:
-  http://www.bcgsc.ca/platform/bioinfo/license/bcca_2010
   and at the bottom of this readme file
 
   For commercial licensing options, please contact Patrick Rebstein prebstein@bccancer.bc.ca
