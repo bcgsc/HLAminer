@@ -1,6 +1,7 @@
 [![Release](https://img.shields.io/github/release/warrenlr/HLAminer.svg)](https://github.com/warrenlr/HLAminer/releases)
 [![Downloads](https://img.shields.io/github/downloads/warrenlr/HLAminer/total?logo=github)](https://github.com/warrenlr/HLAminer/releases/download/v1.4/HLAminer_1-4.tar.gz)
 [![Issues](https://img.shields.io/github/issues/warrenlr/HLAminer.svg)](https://github.com/warrenlr/HLAminer/issues)
+Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAminer.svg)](https://github.com/warrenlr/HLAminer/stargazers)!
 
 ![Logo](https://github.com/warrenlr/hlaminer/blob/master/hlaminer-logo.png)
 # HLAminer
