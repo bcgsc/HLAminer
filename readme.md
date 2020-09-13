@@ -70,6 +70,9 @@ Derivation of HLA class I and class II predictions from shotgun sequence dataset
 1) Targeted Assembly of Shotgun Reads (HPTASR)
 2) Read Alignment (HPRA)
 
+BEST SHORT READ RESULTS ARE OBTAINED WITH HPTASR WITH READS 100bp AND UP (IDEALLY 150bp).
+IT WILL WORK WITH SHORTER READS (50bp) BUT 4-digit HLA ALLELE PREDICTIONS MAY BE AMBIGUOUS 
+
 
 ### DESCRIPTION <a name="DESCRIPTION"></a>
 --------
