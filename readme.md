@@ -6,7 +6,7 @@ Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAmin
 ![Logo](https://github.com/warrenlr/hlaminer/blob/master/hlaminer-logo.png)
 # HLAminer
 
-## HLAminer v1.4 Rene L. Warren (c) 2011-2020
+## HLAminer v1.4 Rene L. Warren (c) 2011-2021
 ## email: rwarren [at] bcgsc [dot] ca
 
 
@@ -48,9 +48,9 @@ Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAmin
 ### LICENSE <a name="LICENSE"></a>
 --------
 
-  HLAminer Copyright (c) 2011-2020 Canada's Michael Smith Genome Science Centre.  All rights reserved.
-  TASR Copyright   (c) 2010-2020 Canada's Michael Smith Genome Science Centre.  All rights reserved.
-  SSAKE Copyright  (c) 2006-2020 Canada's Michael Smith Genome Science Centre.  All rights reserved.
+  HLAminer Copyright (c) 2011-2021 Canada's Michael Smith Genome Science Centre.  All rights reserved.
+  TASR Copyright   (c) 2010-2021 Canada's Michael Smith Genome Science Centre.  All rights reserved.
+  SSAKE Copyright  (c) 2006-2021 Canada's Michael Smith Genome Science Centre.  All rights reserved.
    
   Due to the clinical implications of HLAminer, the code is now released
   under the BC Cancer Agency software license agreement (academic use).
