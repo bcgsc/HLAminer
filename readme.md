@@ -7,7 +7,7 @@ Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAmin
 ![Logo](https://github.com/warrenlr/hlaminer/blob/master/hlaminer-logo.png)
 # HLAminer
 
-## HLAminer v1.4 Rene L. Warren (c) 2011-2021
+## HLAminer v1.4 Rene L. Warren (c) 2011-2022
 ## email: rwarren [at] bcgsc [dot] ca
 
 
