@@ -1,1 +1,0 @@
-../bin/HPRArnaseq_pacbioSEclassI.sh
