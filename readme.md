@@ -293,19 +293,22 @@ A test is provided at ./test-demo/HPRAwgs_ONTclassI-IIdemo.sh
 
 The output files:
 HLAminer_HPRA_ERR2585115.csv
+-and-
 HLAminer_HPRA_ERR2585115.log
 
 you generate should be comparable* to:
 HLAminer_HPRA_ERR2585115_test.csv
+-and-
 HLAminer_HPRA_ERR2585115_test.log
 
 
-*exact scores are not to be expected, because they vary based on the HLA sequence database used, which differ from different release of the code
+*exact scores are not to be expected, because they vary based on the HLA sequence database used, which differ from different release of the code (and your own updating of HLA sequence databases, which is highly recommended to do before you use HLAminer).
 
 Results below demonstrate HLAminer's ability to fairly accurately predict HLA-I and -II types from direct [and streamed] nanopore sequencing reads [old chemistry] alignments 
 <pre>
 
 HLAminer PREDICTIONS (top 2 per HLA allele group, by high-score):
+--------------------
 
 A*30:106/A*68:02P
 B*35:01P/B*57:01P ex. B*57:03P
@@ -320,9 +323,11 @@ DPA1*02:02P/DPA1*01:03P
 DPB1*90:01P/DPB1*01:01P
 DRA*01:01P
 
-REPORTED TYPES (extracted from https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5804087/#MOESM1 Supp file 1 13059_2018_1388_MOESM1_ESM.xlsx Tab S6):
 
-NA19240 (Child) 
+=====================
+REPORTED TYPES (extracted from https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5804087/#MOESM1 Supp file 1 13059_2018_1388_MOESM1_ESM.xlsx Tab S6, NA19240 (Child)):
+--------------
+ 
 A*30:01:01G/A*68:02:01G
 B*35:01:01G/B*57:03:01G
 C*04:01:01G/C*18:01:01G
