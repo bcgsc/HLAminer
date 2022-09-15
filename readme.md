@@ -385,7 +385,17 @@ UPGRADE, YOU WILL HAVE TO REGENERATE THE INDEXES
 ***../database/updateAll.sh***
 ******************************
 
-Note: For alignment of nanopore genomic reads, we recommend aligning to a file comprised of human genome chromosome and HLA-I and -II alleles to reduce the noise in alignments (especially when running minimap2) 
+Note: For alignment of nanopore genomic/transcriptomic reads, we recommend aligning to a file comprised of human genome chromosome and HLA-I and -II alleles to reduce the noise in alignments (especially when running minimap2). If you are predicting from direct ONT (nanopore) or PacBio long read alignments, please update the genome files:
+<pre>
+cd database
+cat GCA_000001405.15_GRCh38_genomic.chr-only-noChr6.fa HLA-I_II_GEN.fasta | pigz - > GCA_000001405.15_GRCh38_genomic.chr-only-noChr6-HLA-I_II_GEN.fa.gz
+cat GCA_000001405.15_GRCh38_genomic.chr-only-noChr6.fa HLA-I_II_CDS.fasta | pigz - > GCA_000001405.15_GRCh38_genomic.chr-only-noChr6-HLA-I_II_CDS.fa.gz
+</pre>
+Genome file (without Chr6)
+https://www.bcgsc.ca/downloads/btl/hlaminer/GCA_000001405.15_GRCh38_genomic.chr-only-noChr6.fa.gz
+
+or download those files (Aug 2022 update) from:
+https://www.bcgsc.ca/downloads/btl/hlaminer/
 
 
 3) P designation files
