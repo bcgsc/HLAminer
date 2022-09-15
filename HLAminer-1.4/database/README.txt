@@ -34,3 +34,14 @@ to update all reference sequences.
 
 
 *Change the last line to point to the location of bwa on your system.
+
+If you are predicting from direct ONT (nanopore) or PacBio long read alignments, please update the genome files:
+
+cat GCA_000001405.15_GRCh38_genomic.chr-only-noChr6.fa HLA-I_II_GEN.fasta | pigz - > GCA_000001405.15_GRCh38_genomic.chr-only-noChr6-HLA-I_II_GEN.fa.gz
+cat GCA_000001405.15_GRCh38_genomic.chr-only-noChr6.fa HLA-I_II_CDS.fasta | pigz - > GCA_000001405.15_GRCh38_genomic.chr-only-noChr6-HLA-I_II_CDS.fa.gz
+
+Genome file (without Chr6)
+https://www.bcgsc.ca/downloads/btl/hlaminer/GCA_000001405.15_GRCh38_genomic.chr-only-noChr6.fa.gz
+
+or download (Aug 2022 update) from:
+https://www.bcgsc.ca/downloads/btl/hlaminer/
