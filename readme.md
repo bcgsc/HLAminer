@@ -274,7 +274,7 @@ choosing the ideal k to use depends on the input read length and is warranted.
 HLAminer v1.4 provides initial support for HLA prediction from raw uncorrected shotgun nanopore long reads (such as those from Oxford Nanopore Technologies).
 HLAminer v1.4 implements a streaming approach to reading .sam alignment files, supporting the alignment of GB worth of read data in a few hours and predictions within seconds of alignment completion, without saving costly .sam files to disk.
 
-We tested the software on the NA19240 promethion dataset.
+We tested the software on the NA19240 WGS promethion dataset (2018, older chemistry).
 https://gigabaseorgigabyte.wordpress.com/2018/05/24/promethion-human-genome-na19240/
 with data available from ENA at this location:
 https://www.ebi.ac.uk/ena/data/view/PRJEB26791
@@ -287,8 +287,60 @@ nohup wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR258/002/ERR2585112/ERR2585112.f
 2) Then, we predicted HLA by running minimap2 and HLAminer v1.4:
 <pre>
 /usr/bin/time -v -o minimap_hlaminerERR2585115-1mod.time minimap2 -t 60 -ax map-ont --MD ../database/GCA_000001405.15_GRCh38_genomic.chr-only-noChr6-HLA-I_II_GEN.fa.gz ERR2585115.fastq.gz | ./HLAminer.pl -h ../database/HLA-I_II_GEN.fasta -s 500 -q 1 -i 1 -p ../database/hla_nom_p.txt -a stream
+
 </pre>
 A test is provided at ./test-demo/HPRAwgs_ONTclassI-IIdemo.sh
+
+The output files:
+HLAminer_HPRA_ERR2585115.csv
+HLAminer_HPRA_ERR2585115.log
+
+you generate should be comparable* to:
+HLAminer_HPRA_ERR2585115_test.csv
+HLAminer_HPRA_ERR2585115_test.log
+
+
+*exact scores are not to be expected, because they vary based on the HLA sequence database used, which differ from different release of the code
+
+Results below demonstrate HLAminer's ability to fairly accurately predict HLA-I and -II types from direct [and streamed] nanopore sequencing reads [old chemistry] alignments 
+<pre>
+
+HLAminer PREDICTIONS (top 2 per HLA allele group, by high-score):
+
+A*30:106/A*68:02P
+B*35:01P/B*57:01P ex. B*57:03P
+C*04:01P/C*18:01P
+F*01:01P
+G*01:01P
+
+DQA1*01:02P/DQA1*05:01P
+DQB1*05:02P/DQB1*03:03P ex. DQB1*03:01P
+DRB1*12:01P/DRB1*16:02P
+DPA1*02:02P/DPA1*01:03P
+DPB1*90:01P/DPB1*01:01P
+DRA*01:01P
+
+REPORTED TYPES (extracted from https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5804087/#MOESM1 Supp file 1 13059_2018_1388_MOESM1_ESM.xlsx Tab S6):
+
+NA19240 (Child) 
+A*30:01:01G/A*68:02:01G
+B*35:01:01G/B*57:03:01G
+C*04:01:01G/C*18:01:01G
+F*01:01:01:08;F*01:01:01:09;F*01:02;F*01:01:01:10;F*01:03:01:01;F*01:01:01:11;F*01:03:01:02;F*01:01:01:12;F*01:01:02:01;F*01:01:02:02;F*01:01:02:03;F*01:01:02:04;F*01:01:02:05;F*01:01:02:06;F*01:01:01:01;F*01:01:01:02;F*01:01:01:03;F*01:01:01:04;F*01:01:01:05;F*01:01:01:06;F*01:01:01:07/F*01:01:01:08;F*01:01:01:09;F*01:02;F*01:01:01:10;F*01:03:01:01;F*01:01:01:11;F*01:03:01:02;F*01:01:01:12;F*01:01:02:01;F*01:01:02:02;F*01:01:02:03;F*01:01:02:04;F*01:01:02:05;F*01:01:02:06;F*01:01:01:01;F*01:01:01:02;F*01:01:01:03;F*01:01:01:04;F*01:01:01:05;F*01:01:01:06;F*01:01:01:07 
+G*01:06;G*01:01:02:01;G*01:01:02:02;G*01:18;G*01:08:01;G*01:01:18;G*01:01:19/G*01:05N
+H*02:05/H*02:05         
+J*02:01;J*01:01:01:05;J*01:01:01:04;J*01:01:01:03;J*01:01:01:02;J*01:01:01:01/J*02:01;J*01:01:01:05;J*01:01:01:04;J*01:01:01:03;J*01:01:01:02;J*01:01:01:01     L*01:01:02;L*01:01:01:01;L*01:01:01:02;L*01:01:01:03/L*01:02
+
+DQA1*01:02:01G/DQA1*05:01:01G
+DQB1*05:02:01G/DQB1*03:01:01G
+DRB1*12:01:01G/DRB1*16:02:01G
+DPA1*02:01:01G/DPA1*02:02:02G
+DPB1*01:01:01G/DPB1*01:01:01G
+DOA*01:01:05/DOA*01:01:02:03;DOA*01:01:02:02;DOA*01:01:02:01;DOA*01:01:04:02;DOA*01:01:04:01    DMA*01:01:01:02;DMA*01:01:01:01;DMA*01:04;DMA*01:03;DMA*01:02;DMA*01:01:01:04;DMA*01:01:01:03/DMA*01:01:01:02;DMA*01:01:01:01;DMA*01:04;DMA*01:03;DMA*01:02;DMA*01:01:01:04;DMA*01:01:01:03
+DMB*01:02;DMB*01:01:01:04;DMB*01:01:01:03;DMB*01:01:01:02;DMB*01:03:01:04;DMB*01:01:01:01;DMB*01:03:01:03;DMB*01:03:01:02;DMB*01:03:01:01;DMB*01:05;DMB*01:04/DMB*01:02;DMB*01:01:01:04;DMB*01:01:01:03;DMB*01:01:01:02;DMB*01:03:01:04;DMB*01:01:01:01;DMB*01:03:01:03;DMB*01:03:01:02;DMB*01:03:01:01;DMB*01:05;DMB*01:04
+DRA*01:01:01:01;DRA*01:02:01;DRA*01:01:01:02;DRA*01:02:02;DRA*01:01:01:03;DRA*01:02:03;DRA*01:01:02/DRA*01:01:01:01;DRA*01:02:01;DRA*01:01:01:02;DRA*01:02:02;DRA*01:01:01:03;DRA*01:02:03;DRA*01:01:02
+
+</pre>
 
 
 ### DATABASES <a name="DATABASES"></a>
