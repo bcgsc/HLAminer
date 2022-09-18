@@ -30,7 +30,7 @@ update_p_designation.sh
 to update the p designation file
 
 or: ./updateAll.sh 
-to update all reference sequences.
+to update all reference sequences, including the ones used to predict from direct ONT (nanopore) or PacBio long read alignments (below)
 
 
 *Change the last line to point to the location of bwa on your system.
