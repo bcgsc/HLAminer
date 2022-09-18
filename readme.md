@@ -1,7 +1,7 @@
 [![Release](https://img.shields.io/github/release/warrenlr/HLAminer.svg)](https://github.com/warrenlr/HLAminer/releases)
 [![Downloads](https://img.shields.io/github/downloads/warrenlr/HLAminer/total?logo=github)](https://github.com/warrenlr/HLAminer/releases/download/v1.4/HLAminer_1-4.tar.gz)
 [![Issues](https://img.shields.io/github/issues/warrenlr/HLAminer.svg)](https://github.com/warrenlr/HLAminer/issues)
-[![link](https://img.shields.io/badge/HLAminer-manuscript-brightgreen)](http://genomemedicine.com/content/4/12/95/abstract)
+[![link](https://img.shields.io/badge/HLAminer-manuscript-brightgreen)](https://doi.org/10.1186/gm396)
 Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAminer.svg)](https://github.com/warrenlr/HLAminer/stargazers)
 
 ![Logo](https://github.com/warrenlr/hlaminer/blob/master/hlaminer-logo.png)
@@ -480,7 +480,7 @@ Warren RL, Choe G, Freeman DJ, Castellarin M, Munro S, Moore R, Holt
 RA.  2012. Derivation of HLA types from shotgun sequence datasets. 
 Genome Med. 4:95
 </pre>
-[![link](https://img.shields.io/badge/HLAminer-manuscript-brightgreen)](http://genomemedicine.com/content/4/12/95/abstract)
+[![link](https://img.shields.io/badge/HLAminer-manuscript-brightgreen)](https://doi.org/10.1186/gm396)
 
 
 ### LICENSE AGREEMENT <a name="FULL"></a>
