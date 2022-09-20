@@ -487,7 +487,9 @@ Genome Med. 4:95
 and
 
 <pre>
-Warren RL. 2022. HLA predictions from long sequence read alignments, streamed directly into HLAminer. arXiv. https://doi.org/10.48550/arXiv.2209.09155
+Warren RL. 2022. 
+HLA predictions from long sequence read alignments, streamed directly into HLAminer.
+arXiv. https://doi.org/10.48550/arXiv.2209.09155
 </pre>
 [![link](https://img.shields.io/badge/HLAminer-preprint-brightgreen)](https://doi.org/10.48550/arXiv.2209.09155)
 
