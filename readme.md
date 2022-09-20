@@ -26,7 +26,7 @@ Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAmin
 4. [DESCRIPTION](#DESCRIPTION)
 5. [INSTALL](#INSTALL)
 6. [COMMANDS AND OPTIONS](#COMMANDS)
-7. [PREDICTING FROM NANOPORE READS](#NANOPORE)
+7. [PREDICTING FROM LONG (NANOPORE/PACBIO) READS](#NANOPORE)
 8. [DATABASES](#DATABASES)
 9. [AUTHORS](#AUTHORS)
 10. [CITING](#CITING)
@@ -49,9 +49,9 @@ Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAmin
 ### LICENSE <a name="LICENSE"></a>
 --------
 
-  HLAminer Copyright (c) 2011-2021 Canada's Michael Smith Genome Science Centre.  All rights reserved.
-  TASR Copyright   (c) 2010-2021 Canada's Michael Smith Genome Science Centre.  All rights reserved.
-  SSAKE Copyright  (c) 2006-2021 Canada's Michael Smith Genome Science Centre.  All rights reserved.
+  HLAminer Copyright (c) 2011-2022 Canada's Michael Smith Genome Science Centre.  All rights reserved.
+  TASR Copyright   (c) 2010-2022 Canada's Michael Smith Genome Science Centre.  All rights reserved.
+  SSAKE Copyright  (c) 2006-2022 Canada's Michael Smith Genome Science Centre.  All rights reserved.
    
   Due to the clinical implications of HLAminer, the code is now released
   under the BC Cancer Agency software license agreement (academic use).
@@ -268,7 +268,7 @@ improved by using larger k values for assembly (-k). Experimentation for
 choosing the ideal k to use depends on the input read length and is warranted. 
 
 
-### PREDICTING FROM NANOPORE READS <a name="NANOPORE"></a>
+### PREDICTING FROM LONG (NANOPORE/PACBIO) READS <a name="NANOPORE"></a>
 --------
 
 HLAminer v1.4 provides initial support for HLA prediction from raw uncorrected shotgun nanopore long reads (such as those from Oxford Nanopore Technologies).
@@ -300,7 +300,6 @@ you generate should be comparable* to:
 HLAminer_HPRA_ERR2585115_test.csv
 -and-
 HLAminer_HPRA_ERR2585115_test.log
-
 
 *exact scores are not to be expected, because they vary based on the HLA sequence database used, which differ from different release of the code (and your own updating of HLA sequence databases, which is highly recommended to do before you use HLAminer).
 
@@ -345,6 +344,9 @@ DOA*01:01:05/DOA*01:01:02:03;DOA*01:01:02:02;DOA*01:01:02:01;DOA*01:01:04:02;DOA
 DMB*01:02;DMB*01:01:01:04;DMB*01:01:01:03;DMB*01:01:01:02;DMB*01:03:01:04;DMB*01:01:01:01;DMB*01:03:01:03;DMB*01:03:01:02;DMB*01:03:01:01;DMB*01:05;DMB*01:04/DMB*01:02;DMB*01:01:01:04;DMB*01:01:01:03;DMB*01:01:01:02;DMB*01:03:01:04;DMB*01:01:01:01;DMB*01:03:01:03;DMB*01:03:01:02;DMB*01:03:01:01;DMB*01:05;DMB*01:04
 DRA*01:01:01:01;DRA*01:02:01;DRA*01:01:01:02;DRA*01:02:02;DRA*01:01:01:03;DRA*01:02:03;DRA*01:01:02/DRA*01:01:01:01;DRA*01:02:01;DRA*01:01:01:02;DRA*01:02:02;DRA*01:01:01:03;DRA*01:02:03;DRA*01:01:02
 </pre>
+
+For more information, please refer to:
+[![link](https://img.shields.io/badge/HLAminer-preprint-brightgreen)](https://doi.org/10.48550/arXiv.2209.09155)
 
 
 ### DATABASES <a name="DATABASES"></a>
@@ -481,6 +483,13 @@ RA.  2012. Derivation of HLA types from shotgun sequence datasets.
 Genome Med. 4:95
 </pre>
 [![link](https://img.shields.io/badge/HLAminer-manuscript-brightgreen)](https://doi.org/10.1186/gm396)
+
+and
+
+<pre>
+Warren RL. 2022. HLA predictions from long sequence read alignments, streamed directly into HLAminer. arXiv. https://doi.org/10.48550/arXiv.2209.09155
+</pre>
+[![link](https://img.shields.io/badge/HLAminer-preprint-brightgreen)](https://doi.org/10.48550/arXiv.2209.09155)
 
 
 ### LICENSE AGREEMENT <a name="FULL"></a>
