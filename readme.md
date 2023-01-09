@@ -251,7 +251,7 @@ HPRA (HLA Predictions by Read Alignment):
 -l label (run name) -optional-
 
 
-The shell scripts are set to filter out short (<200) contigs that would blur HPTAR predictions.  Feel free to adjust as you see fit.
+The shell scripts are set to filter out short (<200) contigs that could blur HPTASR predictions.  Feel free to adjust as you see fit.
 
 Likewise, HLAminer.pl runs with the set defaults:
 -z minimum contig size.......................<200> (HPTASR)
