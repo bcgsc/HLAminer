@@ -20,19 +20,19 @@ Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAmin
 
 ### CONTENTS
 --------
-1. [SYNOPSIS](#SYNOPSIS)
-2. [LICENSE](#LICENSE)
-3. [OVERVIEW](#OVERVIEW)
-4. [DESCRIPTION](#DESCRIPTION)
-5. [INSTALL](#INSTALL)
-6. [COMMANDS AND OPTIONS](#COMMANDS)
-7. [PREDICTING FROM LONG (NANOPORE/PACBIO) READS](#NANOPORE)
-8. [DATABASES](#DATABASES)
-9. [AUTHORS](#AUTHORS)
-10. [CITING](#CITING)
-11. [FULL LICENSE](#FULL)
+1. [SYNOPSIS](#synopsis)
+2. [LICENSE](#license)
+3. [OVERVIEW](#overview)
+4. [DESCRIPTION](#description)
+5. [INSTALL](#install)
+6. [COMMANDS AND OPTIONS](#commands)
+7. [PREDICTING FROM LONG (NANOPORE/PACBIO) READS](#nanopore)
+8. [DATABASES](#databases)
+9. [AUTHORS](#authors)
+10. [CITING](#citing)
+11. [FULL LICENSE](#full)
 --------
-### SYNOPSIS <a name="SYNOPSIS"></a>
+### SYNOPSIS <a name=synopsis></a>
 --------
 
   HLAminer is a pipeline for predicting HLA from shotgun sequence data (ie. whole genome, whole transcriptome/RNA-Seq, exome), at the group and allele resolution.
@@ -46,7 +46,7 @@ Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAmin
      For HLA Predictions by Read Alignment: execute ./HLAminer/foo/HPRArnaseq.sh
 
 
-### LICENSE <a name="LICENSE"></a>
+### LICENSE <a name=license></a>
 --------
 
   HLAminer Copyright (c) 2011-2022 Canada's Michael Smith Genome Science Centre.  All rights reserved.
@@ -64,7 +64,7 @@ Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAmin
   terms of the GNU General Public License
 
 
-### OVERVIEW <a name="OVERVIEW"></a>
+### OVERVIEW <a name=overview></a>
 --------
 
 Derivation of HLA class I and class II predictions from shotgun sequence datasets (HLAminer) by:
@@ -75,7 +75,7 @@ BEST SHORT READ RESULTS ARE OBTAINED WITH HPTASR WITH READS 100bp AND UP (IDEALL
 IT WILL WORK WITH SHORTER READS (50bp) BUT 4-digit HLA ALLELE PREDICTIONS MAY BE AMBIGUOUS 
 
 
-### DESCRIPTION <a name="DESCRIPTION"></a>
+### DESCRIPTION <a name=description></a>
 --------
 
 The HLA prediction by targeted assembly of short sequence reads (HPTASR), performs targeted de novo assembly of HLA NGS reads and align the resulting contigs to reference HLA alleles from the IMGT/HLA sequence repository using commodity hardware with standard specifications (<2GB RAM, 2GHz).  Putative HLA types are inferred by mining and scoring the contig alignments and an expect value is determined for each.  The method is accurate, simple and fast to execute and, for transcriptome data, requires low depth of coverage. Known HLA class I/class II reference sequences available from the IMGT/HLA public repository are read by TASR using default options (Warren and Holt 2011) to create a hash table of all possible 15 nt words (k-mers) from these reference sequences. Note that this parameter is customizable and larger k values will yield predictions with increased specificity (at the possible expense of sensitivity). Subsequently, NGS data sets are interrogated for the presence of one of these kmers (on either strand) at the 5’ or 3’ start. Whenever an HLA word is identified, the read is recruited as a candidate for de novo assembly. Upon de novo assembly of all recruited reads, a set of contigs is generated.  Only sequence contigs equal or larger than 200nt in length are considered for further analysis, as longer contigs better resolve HLA allelic variants.  Reciprocal BLASTN alignments are performed between the contigs and all HLA allelic reference sequences. HPTASR mines the alignments, scoring each possible HLA allele identified, computing and reporting an expect value (E-value) based on the chance of contigs characterizing given HLA alleles and, reciprocally, the chance of reference HLA alleles aligning best to certain assembled contig sequences
@@ -108,7 +108,7 @@ Corrected shell script that download HLA sequences to reflect change of location
 Added support for predictions from direct alignment of single-end reads
 
 
-### INSTALL <a name="INSTALL"></a>
+### INSTALL <a name=install></a>
 --------
 <pre>
 1. Download and decompress the tar ball
@@ -224,7 +224,7 @@ change path to bwa in HPRA* shell scripts
 TEST YOUR INSTALL BY RUNNING THE SCRIPT IN test-demo. CONSULT THE README-FIRST.txt FILE
 
 
-### COMMANDS AND OPTIONS <a name="COMMANDS"></a>
+### COMMANDS AND OPTIONS <a name=commands></a>
 --------
 
 <pre>
@@ -268,7 +268,7 @@ improved by using larger k values for assembly (-k). Experimentation for
 choosing the ideal k to use depends on the input read length and is warranted. 
 
 
-### PREDICTING FROM LONG (NANOPORE/PACBIO) READS <a name="NANOPORE"></a>
+### PREDICTING FROM LONG (NANOPORE/PACBIO) READS <a name=nanopore></a>
 --------
 
 HLAminer v1.4 provides initial support for HLA prediction from raw uncorrected shotgun nanopore long reads (such as those from Oxford Nanopore Technologies).
@@ -349,7 +349,7 @@ For more information, please refer to:
 [![link](https://img.shields.io/badge/HLAminer-preprint-brightgreen)](https://doi.org/10.48550/arXiv.2209.09155)
 
 
-### DATABASES <a name="DATABASES"></a>
+### DATABASES <a name=databases></a>
 --------
 
 Follow these instructions to download updated HLA sequences from ebi/imgt (shell scripts to automatically download and format the databases exist in ./database/) and refer to README.txt in the ./database directory:
@@ -462,7 +462,7 @@ the likelihood of a base being correct.
 Predictions/read pair are ambiguous when there are multiple predicted allele groups and/or protein coding alleles with the same score.
 
 
-### AUTHORS <a name="AUTHORS"></a>
+### AUTHORS <a name=authors></a>
 --------
 
 <pre>
@@ -470,7 +470,7 @@ Rene Warren
 rwarren at bcgsc.ca
 </pre>
 
-### CITING <a name="CITING"></a>
+### CITING <a name=citing></a>
 --------
 
 Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAminer.svg)](https://github.com/warrenlr/HLAminer/stargazers) and for using, developing and promoting this free software!
@@ -494,7 +494,7 @@ arXiv. https://doi.org/10.48550/arXiv.2209.09155
 [![link](https://img.shields.io/badge/HLAminer-preprint-brightgreen)](https://doi.org/10.48550/arXiv.2209.09155)
 
 
-### LICENSE AGREEMENT <a name="FULL"></a>
+### LICENSE AGREEMENT <a name=full></a>
 -----------------------------------------------------------
 BC CANCER AGENCY SOFTWARE LICENSE AGREEMENT (ACADEMIC USE)
 
