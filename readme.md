@@ -8,7 +8,6 @@ Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAmin
 # HLAminer
 
 ## HLAminer v1.4 Rene L. Warren (c) 2011-2023
-## email: rwarren [at] bcgsc [dot] ca
 
 
 ### Manual Reference Pages – HLAminer - Derivation of HLA class I and class II predictions from shotgun sequence datasets
@@ -467,7 +466,6 @@ Predictions/read pair are ambiguous when there are multiple predicted allele gro
 
 <pre>
 Rene Warren
-rwarren at bcgsc.ca
 </pre>
 
 ### CITING <a name=citing></a>
