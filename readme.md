@@ -73,6 +73,9 @@ Derivation of HLA class I and class II predictions from shotgun sequence dataset
 BEST SHORT READ RESULTS ARE OBTAINED WITH HPTASR WITH READS 100bp AND UP (IDEALLY 150bp).
 IT WILL WORK WITH SHORTER READS (50bp) BUT 4-digit HLA ALLELE PREDICTIONS MAY BE AMBIGUOUS 
 
+This clip summarizes the pipeline:
+https://www.youtube.com/watch?v=j-g8Geh5ST8&list=LL&index=110
+
 
 ### DESCRIPTION <a name=description></a>
 --------
