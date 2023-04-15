@@ -10,7 +10,7 @@ Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAmin
 ## HLAminer v1.4 Rene L. Warren (c) 2011-2023
 
 
-### Manual Reference Pages – HLAminer - Derivation of HLA class I and class II predictions from shotgun sequence datasets
+### Manual Reference Pages – HLAminer - Derivation of HLA (Human Leukocyte Antigen) class I and class II predictions from shotgun sequence datasets
 * This manual assumes that you have a working knowledge of unix, and some shell and perl scripting experience
 
 ### NAME
@@ -34,7 +34,7 @@ Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAmin
 ### SYNOPSIS <a name=synopsis></a>
 --------
 
-  HLAminer is a pipeline for predicting HLA from shotgun sequence data (ie. whole genome, whole transcriptome/RNA-Seq, exome), at the group and allele resolution.
+  HLAminer is a pipeline for predicting Human Leukocyte Antigen (HLA) signatures from shotgun sequence data (ie. whole genome, whole transcriptome/RNA-Seq, exome), at the group and allele resolution.
   It supports predictions from a variety of DNA sequencing technologies including those from Illumina, MGI, PacBio and Oxford Nanopore.   
   Predictions are either derived from targeted assembly or direct alignment.
 
