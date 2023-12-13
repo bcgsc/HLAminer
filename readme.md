@@ -7,7 +7,7 @@ Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAmin
 ![Logo](https://github.com/warrenlr/hlaminer/blob/master/hlaminer-logo.png)
 # HLAminer
 
-## HLAminer v1.4 Rene L. Warren (c) 2011-2023
+## HLAminer v1.4 Rene L. Warren (c) 2011-present
 
 
 ### Manual Reference Pages – HLAminer - Derivation of HLA (Human Leukocyte Antigen) class I and class II predictions from shotgun sequence datasets
@@ -48,7 +48,7 @@ Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAmin
 ### LICENSE <a name=license></a>
 --------
 
-  HLAminer Copyright (c) 2011-2022 Canada's Michael Smith Genome Science Centre.  All rights reserved.
+  HLAminer Copyright (c) 2011-present Canada's Michael Smith Genome Science Centre.  All rights reserved.
   TASR Copyright   (c) 2010-2022 Canada's Michael Smith Genome Science Centre.  All rights reserved.
   SSAKE Copyright  (c) 2006-2022 Canada's Michael Smith Genome Science Centre.  All rights reserved.
    
