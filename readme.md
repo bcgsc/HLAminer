@@ -7,7 +7,7 @@ Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAmin
 ![Logo](https://github.com/warrenlr/hlaminer/blob/master/hlaminer-logo.png)
 # HLAminer
 
-## HLAminer v1.4 Rene L. Warren (c) 2011-present
+## HLAminer (no longer maintained) (c) 2011-present
 
 
 ### Manual Reference Pages – HLAminer - Derivation of HLA (Human Leukocyte Antigen) class I and class II predictions from shotgun sequence datasets
