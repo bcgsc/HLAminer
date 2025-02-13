@@ -214,3 +214,27 @@ Version 2.2.22 [Sep-27-2009]
 Started database file "HLA-I_II_GEN.fasta"
 Formatted 4412 sequences in volume 0
 SUCCESS: formatted database HLA-I_II_GEN.fasta
+
+========================[ Feb 13, 2025  7:51 AM ]========================
+Version 2.2.22 [Sep-27-2009]
+Started database file "HLA_ABC_CDS.fasta"
+Formatted 27559 sequences in volume 0
+SUCCESS: formatted database HLA_ABC_CDS.fasta
+
+========================[ Feb 13, 2025  7:52 AM ]========================
+Version 2.2.22 [Sep-27-2009]
+Started database file "HLA_ABC_GEN.fasta"
+Formatted 17548 sequences in volume 0
+SUCCESS: formatted database HLA_ABC_GEN.fasta
+
+========================[ Feb 13, 2025  7:53 AM ]========================
+Version 2.2.22 [Sep-27-2009]
+Started database file "HLA-I_II_CDS.fasta"
+Formatted 44954 sequences in volume 0
+SUCCESS: formatted database HLA-I_II_CDS.fasta
+
+========================[ Feb 13, 2025  7:54 AM ]========================
+Version 2.2.22 [Sep-27-2009]
+Started database file "HLA-I_II_GEN.fasta"
+Formatted 22107 sequences in volume 0
+SUCCESS: formatted database HLA-I_II_GEN.fasta

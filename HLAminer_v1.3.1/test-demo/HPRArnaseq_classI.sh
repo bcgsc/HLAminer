@@ -1,1 +1,0 @@
-../bin/HPRArnaseq_classI.sh
