@@ -11,7 +11,7 @@ Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAmin
 ## HLAminer (c) 2011-present
 
 
-### Manual Reference Pages – HLAminer - Derivation of HLA (Human Leukocyte Antigen) class I and II predictions from shotgun sequence datasets
+### Manual Reference Pages – HLAminer - Derivation of HLA (Human Leukocyte Antigen) class I and II predictions from DNA/RNA sequencing datasets
 * This manual assumes that you have a working knowledge of unix, and some shell and perl scripting experience
 
 ### NAME
