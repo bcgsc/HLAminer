@@ -6,14 +6,13 @@
 Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAminer.svg)](https://github.com/warrenlr/HLAminer/stargazers)
 
 ![Logo](https://github.com/warrenlr/hlaminer/blob/master/hlaminer-logo.png)
-# HLAminer
 
 ## HLAminer (c) 2011-present
 
 
 Derivation of HLA (Human Leukocyte Antigen) class I and II predictions from DNA/RNA sequencing datasets
 
-* This manual assumes that you have a working knowledge of unix, and some shell and perl scripting experience
+*This manual assumes that you have a working knowledge of Unix, and some shell and perl scripting experience
 
 
 ### CONTENTS
@@ -35,7 +34,7 @@ Derivation of HLA (Human Leukocyte Antigen) class I and II predictions from DNA/
 
   HLAminer is a pipeline for predicting Human Leukocyte Antigen (HLA) signatures from shotgun sequence data (ie. whole genome, whole transcriptome/RNA-Seq, exome), at the group and allele resolution.
   It supports predictions from a variety of DNA sequencing technologies including those from Illumina, MGI, PacBio and Oxford Nanopore.   
-  Predictions are either derived from targeted assembly or direct alignment.
+  Predictions are either derived from targeted sequence assembly, or direct sequence alignments.
 
   For quick tests on Illumina RNA-seq data:
   1. Copy ./test-demo/    eg. cp -rf test-demo foo
