@@ -482,17 +482,18 @@ Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAmin
 If you use HLAminer for you research, please cite:
 
 <pre>
-Warren RL, Choe G, Freeman DJ, Castellarin M, Munro S, Moore R, Holt 
-RA.  2012. Derivation of HLA types from shotgun sequence datasets. 
-Genome Med. 4:95
+Warren RL, Choe G, Freeman DJ, Castellarin M, Munro S, Moore R, Holt RA. (2012)
+Derivation of HLA types from shotgun sequence datasets
+Genome Med. 4, 95. https://doi.org/10.1186/gm396
 </pre>
 [![link](https://img.shields.io/badge/HLAminer-manuscript-brightgreen)](https://doi.org/10.1186/gm396)
 
 and
 
 <pre>
-Warren RL, Birol I. 2025. Streaming long-read sequence alignments for HLA
-predictions using HLAminer. Current Protocols. https://doi.org/10.1002/cpz1.70124
+Warren RL, Birol I. (2025)
+Streaming long-read sequence alignments for HLA predictions using HLAminer
+Current Protocols. 5, e70124. https://doi.org/10.1002/cpz1.70124
 </pre>
 [![link](https://img.shields.io/badge/HLAminer-protocol-brightgreen)](https://doi.org/10.1002/cpz1.70124)
 
