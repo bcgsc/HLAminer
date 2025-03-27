@@ -2,8 +2,9 @@
 [![Downloads](https://img.shields.io/github/downloads/warrenlr/HLAminer/total?logo=github)](https://github.com/warrenlr/HLAminer/releases/download/v1.4/HLAminer_1-4.tar.gz)
 [![Issues](https://img.shields.io/github/issues/warrenlr/HLAminer.svg)](https://github.com/warrenlr/HLAminer/issues)
 [![link](https://img.shields.io/badge/HLAminer-manuscript-brightgreen)](https://doi.org/10.1186/gm396)
-[![link](https://img.shields.io/badge/HLAminer-preprint-brightgreen)](https://doi.org/10.48550/arXiv.2209.09155)
+[![link](https://img.shields.io/badge/HLAminer-protocol-brightgreen)](https://doi.org/10.1002/cpz1.70124)
 Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAminer.svg)](https://github.com/warrenlr/HLAminer/stargazers)
+
 
 ![Logo](https://github.com/warrenlr/hlaminer/blob/master/hlaminer-logo.png)
 
@@ -274,6 +275,10 @@ choosing the ideal k to use depends on the input read length and is warranted.
 HLAminer v1.4 provides initial support for HLA prediction from raw uncorrected shotgun nanopore long reads (such as those from Oxford Nanopore Technologies).
 HLAminer v1.4 implements a streaming approach to reading .sam alignment files, supporting the alignment of GB worth of read data in a few hours and predictions within seconds of alignment completion, without saving costly .sam files to disk.
 
+*More information here:* 
+Warren RL, Birol I. 2025. Streaming long-read sequence alignments for HLA
+predictions using HLAminer. Current Protocols. https://doi.org/10.1002/cpz1.70124
+
 We tested the software on the NA19240 WGS promethion dataset (2018, older chemistry).
 https://gigabaseorgigabyte.wordpress.com/2018/05/24/promethion-human-genome-na19240/
 with data available from ENA at this location:
@@ -486,11 +491,10 @@ Genome Med. 4:95
 and
 
 <pre>
-Warren RL. 2022. 
-HLA predictions from long sequence read alignments, streamed directly into HLAminer.
-arXiv. https://doi.org/10.48550/arXiv.2209.09155
+Warren RL, Birol I. 2025. Streaming long-read sequence alignments for HLA
+predictions using HLAminer. Current Protocols. https://doi.org/10.1002/cpz1.70124
 </pre>
-[![link](https://img.shields.io/badge/HLAminer-preprint-brightgreen)](https://doi.org/10.48550/arXiv.2209.09155)
+[![link](https://img.shields.io/badge/HLAminer-protocol-brightgreen)](https://doi.org/10.1002/cpz1.70124)
 
 
 ### LICENSE AGREEMENT <a name=full></a>
