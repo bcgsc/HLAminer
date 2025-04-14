@@ -358,11 +358,11 @@ For more information, please refer to:
 [![link](https://img.shields.io/badge/HLAminer-preprint-brightgreen)](https://doi.org/10.48550/arXiv.2209.09155)
 [![link](https://img.shields.io/badge/HLAminer-protocol-brightgreen)](https://doi.org/10.1002/cpz1.70124)
 
-#### UPDATE (April 2025)
 
-Use of HG38 reference for long read alignments with HLAminer
+#### Use of HG38 reference for long-read alignments with HLAminer
 
 Here’s why we use HG38 minus chr6 for alignments with long reads:
+
 ✅ 1. Excluding chr6 and replacing with complete HLA alleles improves allele resolution
 The classical HLA loci (HLA-A, -B, -C, -DRB1, etc.) on chr6 are highly polymorphic and not well-represented in a linear reference.
 Mapping short or long reads to the limited HLA representation in GRCh38 often results in ambiguous or incorrect alignment, especially for novel or rare alleles.
@@ -371,7 +371,8 @@ By using all known HLA alleles (from IPD-IMGT/HLA) in a dedicated contig, you're
 ✅ 2. Keeping the rest of GRCh38 intact ensures genomic compatibility
 Most reads outside of the MHC region still align correctly to the standard GRCh38 chromosomes.
 
-Improvements (April 2025)
+Improvements (April 2025):
+
 ✅ 1. Masking of chr6 HLA loci (coordinates 28510120-33480577)
 
 Notes:
