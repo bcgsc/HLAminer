@@ -293,6 +293,10 @@ nohup wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR258/002/ERR2585112/ERR2585112.f
 <pre>
 /usr/bin/time -v -o minimap_hlaminerERR2585115-1mod.time minimap2 -t 60 -ax map-ont --MD ../database/GCA_000001405.15_GRCh38_genomic.chr-only-noChr6-HLA-I_II_GEN.fa.gz ERR2585115.fastq.gz | ./HLAminer.pl -h ../database/HLA-I_II_GEN.fasta -s 500 -q 1 -i 1 -p ../database/hla_nom_p.txt -a stream
 
+-or-
+
+/usr/bin/time -v -o minimap_hlaminerERR2585115-2mod.time minimap2 -t 60 -ax map-ont --MD ../database/GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked-HLA-I_II_GEN.fa.gz ERR2585115.fastq.gz | ./HLAminer.pl -h ../database/HLA-I_II_GEN.fasta -s 500 -q 1 -i 1 -p ../database/hla_nom_p.txt -a stream
+
 </pre>
 A test is provided at ./test-demo/HPRAwgs_ONTclassI-IIdemo.sh
 
@@ -352,6 +356,29 @@ DRA*01:01:01:01;DRA*01:02:01;DRA*01:01:01:02;DRA*01:02:02;DRA*01:01:01:03;DRA*01
 
 For more information, please refer to:
 [![link](https://img.shields.io/badge/HLAminer-preprint-brightgreen)](https://doi.org/10.48550/arXiv.2209.09155)
+[![link](https://img.shields.io/badge/HLAminer-protocol-brightgreen)](https://doi.org/10.1002/cpz1.70124)
+
+#### UPDATE (April 2025)
+
+Use of HG38 reference for long read alignments with HLAminer
+
+Here’s why we use HG38 minus chr6 for alignments with long reads:
+✅ 1. Excluding chr6 and replacing with complete HLA alleles improves allele resolution
+The classical HLA loci (HLA-A, -B, -C, -DRB1, etc.) on chr6 are highly polymorphic and not well-represented in a linear reference.
+Mapping short or long reads to the limited HLA representation in GRCh38 often results in ambiguous or incorrect alignment, especially for novel or rare alleles.
+By using all known HLA alleles (from IPD-IMGT/HLA) in a dedicated contig, you're allowing your mapper (e.g. minimap2) to consider each allele as an independent path — effectively emulating a graph reference without the overhead.
+
+✅ 2. Keeping the rest of GRCh38 intact ensures genomic compatibility
+Most reads outside of the MHC region still align correctly to the standard GRCh38 chromosomes.
+
+Improvements (April 2025)
+✅ 1. Masking of chr6 HLA loci (coordinates 28510120-33480577)
+
+Notes:
+-Custom references are better suited to HLA inference than any static genome, including hs38DH, and the approach aligns with best practices in immunogenomics.
+-It's crucial to keep the HLA allele set up-to-date, and update+document+date those files frequently (see the database folder README for details):
+GCA_000001405.15_GRCh38_genomic.chr-only-noChr6-HLA-I_II_GEN.fa.gz
+GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked-HLA-I_II_GEN.fa.gz
 
 
 ### DATABASES <a name=databases></a>

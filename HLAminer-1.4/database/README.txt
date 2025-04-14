@@ -40,8 +40,18 @@ If you are predicting from direct ONT (nanopore) or PacBio long read alignments,
 cat GCA_000001405.15_GRCh38_genomic.chr-only-noChr6.fa HLA-I_II_GEN.fasta | pigz - > GCA_000001405.15_GRCh38_genomic.chr-only-noChr6-HLA-I_II_GEN.fa.gz
 cat GCA_000001405.15_GRCh38_genomic.chr-only-noChr6.fa HLA-I_II_CDS.fasta | pigz - > GCA_000001405.15_GRCh38_genomic.chr-only-noChr6-HLA-I_II_CDS.fa.gz
 
+and/or
+
+cat GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked.fa HLA-I_II_GEN.fasta | pigz - > GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked-HLA-I_II_GEN.fa.gz
+cat GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked.fa HLA-I_II_CDS.fasta | pigz - > GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked-HLA-I_II_CDS.fa.gz
+
+
 Genome file (without Chr6)
 https://www.bcgsc.ca/downloads/btl/hlaminer/GCA_000001405.15_GRCh38_genomic.chr-only-noChr6.fa.gz
 
-or download (Aug 2022 update) from:
+Genome file (without Chr6 HLA locus)
+https://www.bcgsc.ca/downloads/btl/hlaminer/GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked.fa.gz
+
+
+or download (jan/apr 2025 update) from:
 https://www.bcgsc.ca/downloads/btl/hlaminer/
