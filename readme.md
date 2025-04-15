@@ -420,16 +420,31 @@ UPGRADE, YOU WILL HAVE TO REGENERATE THE INDEXES
 ***../database/updateAll.sh***
 ******************************
 
-Note: For alignment of nanopore genomic/transcriptomic reads, we recommend aligning to a file comprised of human genome chromosome and HLA-I and -II alleles to reduce the noise in alignments (especially when running minimap2). If you are predicting from direct ONT (nanopore) or PacBio long read alignments, please update the genome files:
+Note: For alignment of nanopore genomic/transcriptomic reads, we recommend aligning to a file comprised of human genome chromosomes and HLA-I and -II alleles to reduce the noise in alignments (especially when running minimap2). If you are predicting from direct ONT (nanopore) or PacBio long read alignments, please update the genome files (refer to the above section "Use of HG38 reference for long-read alignments with HLAminer"):
+
+Genome file (without Chromosome 6):
+<pre>
+https://www.bcgsc.ca/downloads/btl/hlaminer/GCA_000001405.15_GRCh38_genomic.chr-only-noChr6.fa.gz
+</pre>
+then:
 <pre>
 cd database
 cat GCA_000001405.15_GRCh38_genomic.chr-only-noChr6.fa HLA-I_II_GEN.fasta | pigz - > GCA_000001405.15_GRCh38_genomic.chr-only-noChr6-HLA-I_II_GEN.fa.gz
 cat GCA_000001405.15_GRCh38_genomic.chr-only-noChr6.fa HLA-I_II_CDS.fasta | pigz - > GCA_000001405.15_GRCh38_genomic.chr-only-noChr6-HLA-I_II_CDS.fa.gz
 </pre>
-Genome file (without Chr6)
-https://www.bcgsc.ca/downloads/btl/hlaminer/GCA_000001405.15_GRCh38_genomic.chr-only-noChr6.fa.gz
 
-or download those files (Aug 2022 update) from:
+Genome file (without HLA region on Chromosome 6):
+<pre>
+https://www.bcgsc.ca/downloads/btl/hlaminer/GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked.fa.gz
+</pre>
+then:
+<pre>
+cd database
+cat GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked.fa HLA-I_II_GEN.fasta | pigz - > GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked-HLA-I_II_GEN.fa.gz
+cat GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked.fa HLA-I_II_CDS.fasta | pigz - > GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked-HLA-I_II_CDS.fa.gz
+</pre>
+
+or download those files (JAN/APR 2025 update) directly from:
 https://www.bcgsc.ca/downloads/btl/hlaminer/
 
 
@@ -448,15 +463,15 @@ http://hla.alleles.org/wmda/hla_nom_p.txt
 --------
 
 HLA predictions from read pair alignments:
-
+<pre>
 HLAminer_HPRA.log
 HLAminer_HPRA.csv
-
+</pre>
 HLA predictions from targeted assemblies:
-
+<pre>
 HLAminer_HPTASR.log
 HLAminer_HPTASR.csv
-
+</pre>
 The .log file tracks the process of HLA mining. It contains the following information:
 -HLAminer command and parameters utilized
 -Contig/read pair alignment output and best HLA hit for each
