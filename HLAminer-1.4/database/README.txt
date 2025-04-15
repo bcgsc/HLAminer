@@ -40,16 +40,16 @@ If you are predicting from direct ONT (nanopore) or PacBio long read alignments,
 cat GCA_000001405.15_GRCh38_genomic.chr-only-noChr6.fa HLA-I_II_GEN.fasta | pigz - > GCA_000001405.15_GRCh38_genomic.chr-only-noChr6-HLA-I_II_GEN.fa.gz
 cat GCA_000001405.15_GRCh38_genomic.chr-only-noChr6.fa HLA-I_II_CDS.fasta | pigz - > GCA_000001405.15_GRCh38_genomic.chr-only-noChr6-HLA-I_II_CDS.fa.gz
 
-and/or
+and/or (Please see in the REFERENCE SEQUENCE FOR LONG-READ ALIGNMENTS section main README):
 
 cat GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked.fa HLA-I_II_GEN.fasta | pigz - > GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked-HLA-I_II_GEN.fa.gz
 cat GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked.fa HLA-I_II_CDS.fasta | pigz - > GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked-HLA-I_II_CDS.fa.gz
 
 
-Genome file (without Chr6)
+Genome file (without Chromosome 6)
 https://www.bcgsc.ca/downloads/btl/hlaminer/GCA_000001405.15_GRCh38_genomic.chr-only-noChr6.fa.gz
 
-Genome file (without Chr6 HLA locus)
+Genome file (with Chromosome 6 HLA locus masked)
 https://www.bcgsc.ca/downloads/btl/hlaminer/GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked.fa.gz
 
 
