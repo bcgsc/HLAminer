@@ -25,10 +25,11 @@ Derivation of HLA (Human Leukocyte Antigen) class I and II predictions from DNA/
 5. [INSTALL](#install)
 6. [COMMANDS AND OPTIONS](#commands)
 7. [PREDICTING FROM LONG (NANOPORE/PACBIO) READS](#nanopore)
-8. [DATABASES](#databases)
-9. [AUTHORS](#authors)
-10. [CITING](#citing)
-11. [FULL LICENSE](#full)
+8. [REFERENCE SEQUENCE FOR LONG-READ ALIGNMENTS](#reference)
+9. [DATABASES](#databases)
+10. [AUTHORS](#authors)
+11. [CITING](#citing)
+12. [FULL LICENSE](#full)
 --------
 ### SYNOPSIS <a name=synopsis></a>
 --------
@@ -359,9 +360,11 @@ For more information, please refer to:
 [![link](https://img.shields.io/badge/HLAminer-protocol-brightgreen)](https://doi.org/10.1002/cpz1.70124)
 
 
+### REFERENCE SEQUENCE FOR LONG-READ ALIGNMENTS <a name=reference></a>
+--------
 #### Use of HG38 reference for long-read alignments with HLAminer
 
-Here’s why we use HG38 minus chr6 for alignments with long reads:
+Here’s why we originally used HG38 without chr6 for alignments with long reads:
 
 ✅ 1. Excluding chr6 and replacing with complete HLA alleles improves allele resolution
 The classical HLA loci (HLA-A, -B, -C, -DRB1, etc.) on chr6 are highly polymorphic and not well-represented in a linear reference.
@@ -370,8 +373,12 @@ By using all known HLA alleles (from IPD-IMGT/HLA) in a dedicated contig, you're
 
 ✅ 2. Keeping the rest of GRCh38 intact ensures genomic compatibility
 Most reads outside of the MHC region still align correctly to the standard GRCh38 chromosomes.
+<pre>
+GCA_000001405.15_GRCh38_genomic.chr-only-noChr6-HLA-I_II_GEN.fa.gz
+</pre>
 
-Improvements (April 2025):
+
+Improvements to the reference sequence used with long-read alignments (April 2025):
 
 ✅ 1. Masking of chr6 HLA locus (HG38 coordinates 28510120-33480577). This range is the standard extended (Class I, II, and III regions and flanking genes+regulatory regions relevant to immune function) MHC region definition from 1000 Genomes and GRC and it's masked in many genomics pipelines to improve mapping accuracy and downstream interpretation. https://www.ncbi.nlm.nih.gov/grc/human/regions/MHC?asm=GRCh38
 <pre>
@@ -380,7 +387,7 @@ GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked-HLA-I_II_GEN.fa.gz
 
 Notes:
 -Custom references are better suited to HLA inference than any static genome, including hs38DH, and the approach aligns with best practices in immunogenomics.
--It's crucial to keep the HLA allele set up-to-date, and update+document+date those files frequently (see the database folder README for details):
+-It's crucial for you to keep the HLA allele set up-to-date, and update+document+date those files frequently (see the database folder README and the DATABASES section below for details):
 <pre>
 GCA_000001405.15_GRCh38_genomic.chr-only-noChr6-HLA-I_II_GEN.fa.gz
 GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked-HLA-I_II_GEN.fa.gz
