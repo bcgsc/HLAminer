@@ -385,9 +385,12 @@ Improvements to the reference sequence used with long-read alignments (April 202
 GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked-HLA-I_II_GEN.fa.gz
 </pre>
 
+
 Notes:
+<pre>
 -Custom references are better suited to HLA inference than any static genome, including hs38DH, and the approach aligns with best practices in immunogenomics.
 -It's crucial for you to keep the HLA allele set up-to-date, and update+document+date those files frequently (see the database folder README and the DATABASES section below for details):
+</pre>
 <pre>
 GCA_000001405.15_GRCh38_genomic.chr-only-noChr6-HLA-I_II_GEN.fa.gz
 GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked-HLA-I_II_GEN.fa.gz
