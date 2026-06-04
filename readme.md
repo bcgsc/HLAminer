@@ -3,7 +3,6 @@
 [![Issues](https://img.shields.io/github/issues/warrenlr/HLAminer.svg)](https://github.com/warrenlr/HLAminer/issues)
 [![link](https://img.shields.io/badge/HLAminer-manuscript-brightgreen)](https://doi.org/10.1186/gm396)
 [![link](https://img.shields.io/badge/HLAminer-protocol-brightgreen)](https://doi.org/10.1002/cpz1.70124)
-Thank you for your [![Stars](https://img.shields.io/github/stars/warrenlr/HLAminer.svg)](https://github.com/warrenlr/HLAminer/stargazers)
 
 
 ![Logo](https://github.com/warrenlr/hlaminer/blob/master/hlaminer-logo.png)
