@@ -379,7 +379,7 @@ GCA_000001405.15_GRCh38_genomic.chr-only-noChr6-HLA-I_II_GEN.fa.gz
 
 Improvements to the reference sequence used with long-read alignments (April 2025):
 
-✅ 1. Masking of chr6 HLA locus (HG38 coordinates 28510120-33480577). This range is the standard extended (Class I, II, and III regions and flanking genes+regulatory regions relevant to immune function) MHC region definition from 1000 Genomes and GRC and it's masked in many genomics pipelines to improve mapping accuracy and downstream interpretation. https://www.ncbi.nlm.nih.gov/grc/human/regions/MHC?asm=GRCh38
+✅ 3. Masking of chr6 HLA locus (HG38 coordinates 28510120-33480577). This range is the standard extended (Class I, II, and III regions and flanking genes+regulatory regions relevant to immune function) MHC region definition from 1000 Genomes and GRC and it's masked in many genomics pipelines to improve mapping accuracy and downstream interpretation. https://www.ncbi.nlm.nih.gov/grc/human/regions/MHC?asm=GRCh38
 <pre>
 GCA_000001405.15_GRCh38_genomic.chr-only-chr6hlamasked-HLA-I_II_GEN.fa.gz
 </pre>
